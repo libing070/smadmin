@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="img/logo.png"/>
+    <title>平台管理系统</title>
+   <!--  <link href="css/bootstrap.css" rel="stylesheet"> -->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link href="css/login.css" rel="stylesheet">
+     <link rel="stylesheet" type="text/css" href="js/SweetAlert2/resource/css/sweetalert2.min.css"/>
+</head>
+<body>
+<div class="box">
+    <div class="login-box">
+        <div class="login-title text-center">
+            <h1><small>平台管理系统</small></h1>
+        </div>
+        <div class="login-content ">
+            <div class="form">
+                <form action="#" method="post">
+                    <div class="form-group">
+                        <div class="col-xs-12  ">
+                            <div class="input-group">
+                                <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
+                                <input type="text" id="username" name="username" class="form-control" placeholder="用户名">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-xs-12  ">
+                            <div class="input-group">
+                                <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
+                                <input type="password" id="password" name="password" class="form-control" placeholder="密码">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-xs-12  ">
+                            <div class="input-group">
+                                <span class="input-group-addon"><span class="glyphicon glyphicon-phone"></span></span>
+                                <input type="text" id="currphone" name="currphone" class="form-control" placeholder="手机号码">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-xs-12  ">
+                            <div class="input-group ">
+                                <span class="input-group-addon"><span class="glyphicon glyphicon-comment"></span></span>
+                                <input style="width:60%" type="text" id="yzmvalue" name="yzmvalue" class="form-control" placeholder="验证码">
+                                &nbsp;&nbsp;
+                                <input   class=" btn btn-primary" style="vertical-align:text-top;width:35%" id="getyzm" type="button" value="获取验证码"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group form-actions">
+                        <div class="col-xs-4 col-xs-offset-4 " style="margin: 0 37%;">
+                            <a href="#" id="btnLogin"class="btn btn-sm btn-info"><span class="glyphicon glyphicon-off"></span> 登录</a>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-xs-6 link">
+                            <p class="text-center remove-margin"><small>忘记密码？</small> <a href="#" id="findUser"><small>找回</small></a>
+                            </p>
+                        </div>
+                        <div class="col-xs-6 link">
+                            <p class="text-center remove-margin"><small>还没注册?</small> <a href="#" id="regUser"><small >注册</small></a>
+                            </p>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+ <script src="js/SweetAlert2/resource/js/sweetalert2.min.js"></script> 
+<!--  <script src="js/SweetAlert2/resource/js/sweetalert2.common.js"></script>  -->
+     <script src="js/jquery-1.10.2.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+    <script src="js/md5.js"></script>
+    <script src="js/common.js"></script>
+    <script type="text/javascript" src="js/login.js"></script>
+    <script type="text/javascript" src="js/reguser.js"></script>
+    <script type="text/javascript" src="js/finduser.js"></script>
+    
+</body>
+</html>

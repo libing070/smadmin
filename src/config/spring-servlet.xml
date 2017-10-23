@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:p="http://www.springframework.org/schema/p" xmlns:context="http://www.springframework.org/schema/context"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans 
+        http://www.springframework.org/schema/beans/spring-beans-3.2.xsd 
+        http://www.springframework.org/schema/mvc 
+        http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
+        http://www.springframework.org/schema/context 
+        http://www.springframework.org/schema/context/spring-context-3.2.xsd ">
+    <!-- 启用spring mvc 注解 -->
+    
+     <mvc:annotation-driven /> 
+    <!-- 设置使用注解的类所在的jar包 -->
+    <context:component-scan base-package="com.xxx.controller" />
+    <!-- 完成请求和注解POJO的映射 -->
+    <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" />
+    <!-- 对转向页面的路径解析。prefix：前缀， suffix：后缀 -->
+   <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver" p:prefix="/pages/" p:suffix=".html" />
+   <mvc:default-servlet-handler/>
+   <mvc:interceptors>  
+        <mvc:interceptor>  
+           <!--  需拦截的地址      --> 
+            <!--  
+                       /**的意思是所有文件夹及里面的子文件夹 
+                       /*是所有文件夹，不含子文件夹 
+                       /是web项目的根目录
+                     --> 
+            <mvc:mapping path="/**" />  
+           <!--     需排除拦截的地址   -->
+           <mvc:exclude-mapping path="/pages/js/**" />
+           <mvc:exclude-mapping path="/pages/css/**" />
+           <mvc:exclude-mapping path="/pages/img/**" />
+           <mvc:exclude-mapping path="/pages/fonts/**" />
+            <mvc:exclude-mapping path="/*.do"/>  
+            <mvc:exclude-mapping path="/pages/login.html"/>  
+            <mvc:exclude-mapping path="/pages/reguser.html"/>  
+            <mvc:exclude-mapping path="/pages/finduser.html"/>  
+            <bean class="com.xxx.interceptor.SecurityInterceptor" />  
+        </mvc:interceptor>  
+    </mvc:interceptors>  
+</beans>

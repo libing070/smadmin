@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xxx.dao.SmiShopInfoMapper" >
+    <resultMap id="BaseResultMap" type="com.xxx.model.SmiShopInfo" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="shopNo" property="shopNo" jdbcType="VARCHAR" />
+        <result column="shopName" property="shopName" jdbcType="VARCHAR" />
+        <result column="shopType" property="shopType" jdbcType="VARCHAR" />
+        <result column="shopPassword" property="shopPassword" jdbcType="VARCHAR" />
+        <result column="note" property="note" jdbcType="VARCHAR" />
+        <result column="phone" property="phone" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        id, shopNo, shopName, shopType, shopPassword, note,phone
+    </sql>
+    
+    <!-- 根据门店编码和密码获取门店信息 -->
+    <select id="getByNoAndPwd" resultMap="BaseResultMap" >
+        select 
+        <include refid="Base_Column_List" />
+        from smiShopInfo
+        where shopNo = #{shopNo,jdbcType=VARCHAR} and shopPassword = #{shopPassword,jdbcType=VARCHAR}
+    </select>
+     <!-- 根据门店编码门店信息 -->
+    <select id="getByShopNO" resultMap="BaseResultMap" >
+        select 
+        <include refid="Base_Column_List" />
+        from smiShopInfo
+        where shopNo = #{shopNo,jdbcType=VARCHAR}
+    </select>
+    <!-- 新增用户 -->
+     <insert id="insertUser" parameterType="com.xxx.model.SmiShopInfo" useGeneratedKeys="true" keyProperty="id">
+      INSERT INTO smishopinfo(
+      shopNo,
+      shopName,
+      shopType,
+      shopPassword,
+      note,
+      phone
+      )VALUES(
+      #{shopNo},
+      '没有名称',
+       '2',
+      #{shopPassword},
+      '无描述',
+      #{phone}  
+      )
+     </insert>
+   	<update id="updateShopInfoByShopId" parameterType="com.xxx.model.SmiShopInfo">
+	   UPDATE smishopinfo SET shopPassword=#{shopPassword} WHERE shopNo=#{shopNo}
+	</update>
+
+</mapper>
