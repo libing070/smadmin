@@ -28,7 +28,7 @@
         from smiShopInfo
         where shopNo = #{shopNo,jdbcType=VARCHAR}
     </select>
-    <!-- 新增用户 -->
+    <!-- 新增用户  接口-->
      <insert id="insertUser" parameterType="com.xxx.model.SmiShopInfo" useGeneratedKeys="true" keyProperty="id">
       INSERT INTO smishopinfo(
       shopNo,
