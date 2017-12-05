@@ -1,0 +1,37 @@
+.scatter_wrap {
+  float: left;
+  height: 300px;
+  width: 50%;
+}
+.scatter_wrap .scatter_ctn {
+  height: 100%;
+  width: 1200px;
+}
+.gantt_wrap {
+  float: left;
+  height: 300px;
+  width: 50%;
+  margin-top: 30px;
+  padding-right: 10px;
+}
+.gantt_wrap div.row {
+  margin-bottom: 20px;
+}
+.gantt_wrap div.col-xs-2 {
+  padding-right: 0;
+  text-align: right;
+}
+.gantt_wrap ul li {
+  height: 10px;
+  margin-bottom: 10px;
+  text-align: center;
+}
+.gantt_wrap .blue li {
+  background-color: #2776dd;
+}
+.gantt_wrap .red li {
+  background-color: #d14d44;
+}
+.gantt_wrap ul .off {
+  background-color: rgba(0, 0, 0, 0);
+}

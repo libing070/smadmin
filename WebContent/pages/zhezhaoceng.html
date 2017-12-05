@@ -1,0 +1,66 @@
+<!DOCTYPE html> <html>
+ <head>
+ <title>DIV CSS遮罩层</title>
+ <script src="http://libs.baidu.com/jquery/1.9.0/jquery.js"></script>
+ <script language="javascript" type="text/javascript">
+ function showdiv() { 
+  document.getElementById("sjkg_dialog_bg").style.display ="block";
+  document.getElementById("sjkg_dialog_show").style.display ="block";
+
+  setTimeout(function(){
+	  document.getElementById("sjkg_dialog_bg").style.display ='none';
+	  document.getElementById("sjkg_dialog_show").style.display ='none';
+  },'2000');
+ }
+ $(document).ready(function(){
+	   $("#bt").click(function(){
+	     $($("#box").find("li")[1].remove());
+	   })
+	 })
+ </script>
+ <style type="text/css">
+ .sjkg_dialog_bg{ 
+ display: none;
+  position: absolute; 
+  top: 0%; 
+  left: 0%; 
+  width: 100%;
+   height: 100%; 
+   background-color: #000; 
+   z-index:1001; 
+   -moz-opacity: 0.7; 
+   opacity:.70; 
+   filter: alpha(opacity=70);
+   }
+ .sjkg_dialog_show{
+    display: none; 
+    position: absolute;    
+    top: 40%;
+    left: 40%;
+    width: 18%;
+    height: 10%;
+    padding: 8px;
+    border: 2px solid white;
+     border-radius: 5px;
+    background-color: white; 
+    z-index:1002;
+    overflow: auto;
+     text-align:center;
+     line-height: 3;
+    }
+ </style>
+ </head>
+ <body>
+ <input id="btnshow" type="button" value="Show" onclick="showdiv();"/>
+ <div id="sjkg_dialog_bg" class="sjkg_dialog_bg"></div>
+ <div id="sjkg_dialog_show" class="sjkg_dialog_show">ceshi
+ </div>
+ 
+ <ul id="box">
+   <li>脚本之家欢迎您，只有努力奋斗才会有美好的明天。</li>
+   <li>没有任何人一开始就是高手，必须要努力奋斗才行。</li>
+   <li>每一天都是新的，要好好的珍惜时间。</li>
+ </ul>
+ <input type="button" id="bt" value="查看效果"/>
+ </body>
+ </html>

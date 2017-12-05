@@ -1,0 +1,137 @@
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/WXCS_96159/!svn/ver/187/trunk/wifi-wap/src/com/aspire/wifi/wap/mapper
+END
+UserInfoMapper.java
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/WXCS_96159/!svn/ver/115/trunk/wifi-wap/src/com/aspire/wifi/wap/mapper/UserInfoMapper.java
+END
+VideoPlayMapper.java
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/WXCS_96159/!svn/ver/14/trunk/wifi-wap/src/com/aspire/wifi/wap/mapper/VideoPlayMapper.java
+END
+PinActivityMapper.java
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/WXCS_96159/!svn/ver/73/trunk/wifi-wap/src/com/aspire/wifi/wap/mapper/PinActivityMapper.java
+END
+HeadlineContentMapper.java
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/WXCS_96159/!svn/ver/14/trunk/wifi-wap/src/com/aspire/wifi/wap/mapper/HeadlineContentMapper.java
+END
+PinCreateTableHistoryMapper.java
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/WXCS_96159/!svn/ver/14/trunk/wifi-wap/src/com/aspire/wifi/wap/mapper/PinCreateTableHistoryMapper.java
+END
+MobileReplyReviewMapper.java
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/WXCS_96159/!svn/ver/14/trunk/wifi-wap/src/com/aspire/wifi/wap/mapper/MobileReplyReviewMapper.java
+END
+PinCreateTableDetailMapper.java
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/WXCS_96159/!svn/ver/14/trunk/wifi-wap/src/com/aspire/wifi/wap/mapper/PinCreateTableDetailMapper.java
+END
+PinActionHistoryMapper.java
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/WXCS_96159/!svn/ver/14/trunk/wifi-wap/src/com/aspire/wifi/wap/mapper/PinActionHistoryMapper.java
+END
+AppDownloadMapper.java
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/WXCS_96159/!svn/ver/14/trunk/wifi-wap/src/com/aspire/wifi/wap/mapper/AppDownloadMapper.java
+END
+ConsumePlaceMapper.java
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/WXCS_96159/!svn/ver/14/trunk/wifi-wap/src/com/aspire/wifi/wap/mapper/ConsumePlaceMapper.java
+END
+ShiyongMapper.java
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/WXCS_96159/!svn/ver/164/trunk/wifi-wap/src/com/aspire/wifi/wap/mapper/ShiyongMapper.java
+END
+NoticeMapper.java
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/WXCS_96159/!svn/ver/14/trunk/wifi-wap/src/com/aspire/wifi/wap/mapper/NoticeMapper.java
+END
+VideoInfoMapper.java
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/WXCS_96159/!svn/ver/14/trunk/wifi-wap/src/com/aspire/wifi/wap/mapper/VideoInfoMapper.java
+END
+PinCreateTableMapper.java
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/WXCS_96159/!svn/ver/14/trunk/wifi-wap/src/com/aspire/wifi/wap/mapper/PinCreateTableMapper.java
+END
+StudentReportMapper.java
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/WXCS_96159/!svn/ver/14/trunk/wifi-wap/src/com/aspire/wifi/wap/mapper/StudentReportMapper.java
+END
+WifiSysConfigMapper.java
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/WXCS_96159/!svn/ver/14/trunk/wifi-wap/src/com/aspire/wifi/wap/mapper/WifiSysConfigMapper.java
+END
+PinActionMapper.java
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/WXCS_96159/!svn/ver/14/trunk/wifi-wap/src/com/aspire/wifi/wap/mapper/PinActionMapper.java
+END
+HeadlineReplyMapper.java
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/WXCS_96159/!svn/ver/14/trunk/wifi-wap/src/com/aspire/wifi/wap/mapper/HeadlineReplyMapper.java
+END
+PinCreateTableDetailHistoryMapper.java
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/WXCS_96159/!svn/ver/14/trunk/wifi-wap/src/com/aspire/wifi/wap/mapper/PinCreateTableDetailHistoryMapper.java
+END
+HeadlineContentAttachMapper.java
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/WXCS_96159/!svn/ver/14/trunk/wifi-wap/src/com/aspire/wifi/wap/mapper/HeadlineContentAttachMapper.java
+END
+ZhuanFaEntityMapper.java
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/WXCS_96159/!svn/ver/37/trunk/wifi-wap/src/com/aspire/wifi/wap/mapper/ZhuanFaEntityMapper.java
+END
+PrizeMapper.java
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/WXCS_96159/!svn/ver/187/trunk/wifi-wap/src/com/aspire/wifi/wap/mapper/PrizeMapper.java
+END

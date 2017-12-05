@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/WXCS_96159/!svn/ver/14/trunk/wifi-wap/webapp/views/find
+END
+find_video.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/WXCS_96159/!svn/ver/14/trunk/wifi-wap/webapp/views/find/find_video.jsp
+END
+find_index.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/WXCS_96159/!svn/ver/14/trunk/wifi-wap/webapp/views/find/find_index.jsp
+END
+find_video_detail.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/WXCS_96159/!svn/ver/14/trunk/wifi-wap/webapp/views/find/find_video_detail.jsp
+END
+find_app.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/WXCS_96159/!svn/ver/14/trunk/wifi-wap/webapp/views/find/find_app.jsp
+END
+find_video_list.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/WXCS_96159/!svn/ver/14/trunk/wifi-wap/webapp/views/find/find_video_list.jsp
+END
+find_app_detail.jsp
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/WXCS_96159/!svn/ver/14/trunk/wifi-wap/webapp/views/find/find_app_detail.jsp
+END

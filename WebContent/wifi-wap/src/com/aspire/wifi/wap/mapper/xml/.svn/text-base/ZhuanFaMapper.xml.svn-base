@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <!DOCTYPE mapper 
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aspire.wifi.wap.mapper.ZhuanFaEntityMapper">
+	<resultMap type="com.aspire.wifi.wap.entity.ZhuanFaEntity" id="ZhuanFaEntity">
+		<result column="id" property="id" />
+		<result column="mobile" property="mobile" />
+		<result column="create_time" property="createTime" />
+		<result column="zhuanfa_id" property="zhuanFaId" />
+		<result column="update_time" property="updateTime" />
+		<result column="is_creater" property="isCreater" />
+	</resultMap>
+	<resultMap type="java.util.HashMap" id="ZhuanFaEntitySR">
+		<result column="update_time" property="activeDateString" />
+		<result column="active_type" property="activeType" />		
+	</resultMap>
+    <!-- 新增转发 -->
+    <insert id="insertZhuanFa" parameterType="java.util.HashMap">
+     insert into zhuanfa_action(
+     mobile,
+     zhuanfa_id,
+     is_creater,
+     update_time
+     ) values(
+     #{mobile},
+     #{zhuanFaId},
+     #{isCreater},
+     NOW()
+     )
+    </insert>
+  
+    <!-- 根据条件查询转发信息-->
+	<select id="queryZhuanFaByLimit" resultMap="ZhuanFaEntity" parameterType="java.util.HashMap">
+		SELECT * from zhuanfa_action z where 1=1 
+		<if test="mobile != null and mobile != ''">
+			and z.mobile=#{mobile}  
+		</if>
+		<if test="isCreater != null and isCreater != ''">
+			and	z.is_creater=#{isCreater}
+		</if>
+		<if test="zhuanFaId != null and zhuanFaId != ''">
+			and	z.zhuanfa_id=#{zhuanFaId}
+		</if>
+		
+	</select>
+	<!-- 查询我的创建转发记录 -->
+	<select id="queryZhuanFaHuodong" resultMap="ZhuanFaEntitySR" parameterType="java.util.HashMap">
+		 select '5' AS active_type,DATE_FORMAT(z.update_time, '%Y-%m-%d %H:%i:%S') AS update_time  from zhuanfa_action z where  z.mobile=#{mobile} and z.is_creater=#{isCreater} and z.is_sendMsg=#{isSendMsg}  
+	</select>
+</mapper>

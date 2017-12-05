@@ -1,0 +1,14 @@
+/*轮换大区域*/
+.lunhuan{width:100%; position:relative; overflow:hidden;}
+.lunhuan #lunhuanback{width:100%;height:420px;position:absolute;left:0px;top:0px;overflow:hidden;}
+.lunhuan #lunhuanback p{width:100%;height:420px;position:absolute;left:0px;top:0px;opacity:0;filter:alpha(opacity=0);background-repeat:no-repeat;background-position:50% 0px;}
+.lunhuan .lunhuan_main{width:1190px;height:420px;margin:0 auto;position:relative;}
+/*左侧所有商品列表*/
+.suoyouliebiao{width:239px;position:absolute;left:0px;top:0px;border-left:1px solid #E6E6E6;border-bottom:1px solid #E6E6E6;z-index:200;box-shadow:5px 5px 5px rgba(0, 0, 0, 0.2);}
+/*轮换中间区域*/
+.lunhuancenter{width:757px;height:420px;position:absolute;left:240px;top:0px;}
+.lunhuancenter .centergif{display:block;width:760px;height:420px;position:absolute;left:0px;top:0px;z-index:4;}
+.lunhuancenter b{position:absolute;left:0px;top:-40px;opacity:0;filter:alpha(opacity=0);z-index:3;width:760px;height:210px;display:block;}
+#lunbonum{height:14px;line-height:23px;position:absolute;left:19px;top:393px;z-index:5;}
+#lunbonum li{width:14px;height:14px;float:left;margin-right:9px;background:#B4B4B4;border-radius:14px;cursor:pointer;}
+#lunbonum .lunboone{background:#C80002;cursor:pointer;}

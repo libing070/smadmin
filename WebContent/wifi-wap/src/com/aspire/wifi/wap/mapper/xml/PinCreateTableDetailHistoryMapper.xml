@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <!DOCTYPE mapper 
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aspire.wifi.wap.mapper.PinCreateTableDetailHistoryMapper">
+<resultMap type="com.aspire.wifi.wap.entity.PinCreateTableDetailHistoryEntity" id="PinCreateTableDetailHistory">
+		<result column="hist_id" property="histId" />
+		<result column="flash_sale_id" property="flashSaleId" />
+		<result column="mobile" property="mobile" />
+		<result column="is_owner_mobile" property="isOwnerMobile" />
+		<result column="action_date" property="actionDate" />
+		<result column="action_type" property="actionType" />
+		<result column="action_desc" property="actionDesc" />
+		<result column="join_date" property="joinDate" />
+</resultMap>
+
+<!-- 创建桌的时候将信息插入到历史表中 -->
+
+<insert id="addCreateTableDetailToHistory" parameterType="com.aspire.wifi.wap.entity.PinCreateTableDetailHistoryEntity">
+insert into pin_createtable_detail_hist(flash_sale_id,mobile,is_owner_mobile,action_date,action_type,action_desc,join_date)  
+values(#{flashSaleId},#{mobile},#{isOwnerMobile},#{actionDate},#{actionType},#{actionDesc},#{joinDate})
+</insert>
+
+</mapper>

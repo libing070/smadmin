@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <!DOCTYPE mapper 
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aspire.wifi.wap.mapper.PinCreateTableHistoryMapper">
+<resultMap type="com.aspire.wifi.wap.entity.PinCreateTableHistoryEntity" id="PinCreateTableHistory">
+		<result column="hist_id" property="histId" />
+		<result column="flash_sale_id" property="flashSaleId" />
+		<result column="act_desc" property="actDesc" />
+		<result column="act_type_id" property="actTypeId" />
+		<result column="act_status_id" property="actStatusId" />
+		<result column="consume_place_id" property="consumePlaceId" />
+	    <result column="owner_mobile" property="ownerMobile" />
+		<result column="consume_pic" property="consumePic" />
+		<result column="action_date" property="actionDate" />
+		<result column="action_type" property="actionType" />
+		<result column="action_desc" property="actionDesc" />
+		<result column="createtable_date" property="createTableDate" />
+		<result column="expired_date" property="expiredDate" />
+		<result column="audit_user" property="auditUser" />
+		<result column="audit_time" property="auditTime" />
+		<result column="audit_comment" property="auditComment" />
+		<result column="audit_status" property="auditStatus" />
+</resultMap>
+
+<!-- 将创建的桌插入历史记录 -->
+<insert id="addCreateTableToHistory" parameterType="com.aspire.wifi.wap.entity.PinCreateTableHistoryEntity">
+ insert into pin_createtable_hist (flash_sale_id,act_desc,act_type_id,act_status_id,consume_place_id,owner_mobile,consume_pic,
+ action_date,action_type,action_desc,createtable_date,expired_date,audit_user,audit_time,audit_comment,audit_status)
+ values(#{flashSaleId},#{actDesc},#{actTypeId},#{actStatusId},#{consumePlaceId},#{ownerMobile},#{consumePic},#{actionDate},#{actionType},
+ #{actionDesc},#{createTableDate},#{expiredDate},#{auditUser},#{auditTime},#{auditComment},#{auditStatus})
+
+</insert>
+
+
+
+</mapper>

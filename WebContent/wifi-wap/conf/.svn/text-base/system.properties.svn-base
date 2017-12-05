@@ -1,0 +1,39 @@
+#图片上传目录
+image_Path=D:/tomcat-wx/webapps/Image
+#图片访问目录
+imageAccessPath=http://10.1.26.9:8080/Image/
+
+#视频上传目录
+video_Path=D:/tomcat-wx/webapps/video
+#视频访问目录
+videoAccessPath=http\://10.1.26.9\:8080/video/
+
+#APP应用目录
+app_Path=D:/tomcat-wx/webapps/app
+#视频访问目录
+appAccessPath=http\://10.1.28.35\:8080/app/
+
+#图标目录
+icon_Path=D:/tomcat-wx/webapps/icon
+#图标访问目录
+iconAccessPath=http\://10.1.28.35\:8080/icon/
+
+# 系统设置登陆是否需要密码验证,true:需要，false 不需要
+isVerificationPwd =true
+# 系统设置登陆无需密码验证时，需要输入默认的验证码
+DefaultPwd =888888
+
+# mysql blog类型保存图片设置上传图片大小限制单位为byte,默认1048576=1M
+maxUploadPicSize =3072000
+
+# mysql blog类型保存图片设置上传图片大小限制基数单位为byte,默认1048576=1M
+basicUploadPicSize =300000
+
+#马甲号的注册日期
+regDate='2013-12-10'
+
+#鉴权Ip
+AUCIP=10.0.0.10
+
+#版本号
+version=1.1

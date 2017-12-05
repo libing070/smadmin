@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/WXCS_96159/!svn/ver/180/trunk/wifi-wap/webapp/WEB-INF
+END
+applicationContext.xml
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/WXCS_96159/!svn/ver/180/trunk/wifi-wap/webapp/WEB-INF/applicationContext.xml
+END
+applicationContext-servlet.xml
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/WXCS_96159/!svn/ver/14/trunk/wifi-wap/webapp/WEB-INF/applicationContext-servlet.xml
+END
+applicationContext-quartz.xml
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/WXCS_96159/!svn/ver/14/trunk/wifi-wap/webapp/WEB-INF/applicationContext-quartz.xml
+END
+web.xml
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/WXCS_96159/!svn/ver/14/trunk/wifi-wap/webapp/WEB-INF/web.xml
+END

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-module
+  type="WEB"
+  name="wifi-manage"
+  id="myeclipse.1413527162724"
+  context-root="/wifi-manage"
+  j2ee-spec="6.0"
+  archive="wifi-manage.war">
+  <attributes>
+    <attribute name="webrootdir" value="webapp" />
+  </attributes>
+</project-module>
+

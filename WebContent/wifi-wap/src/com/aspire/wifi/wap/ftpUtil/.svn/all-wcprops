@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/WXCS_96159/!svn/ver/70/trunk/wifi-wap/src/com/aspire/wifi/wap/ftpUtil
+END
+FTPDownloadCommand.java
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/WXCS_96159/!svn/ver/14/trunk/wifi-wap/src/com/aspire/wifi/wap/ftpUtil/FTPDownloadCommand.java
+END
+CleanCommand.java
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/WXCS_96159/!svn/ver/65/trunk/wifi-wap/src/com/aspire/wifi/wap/ftpUtil/CleanCommand.java
+END
+UploadCommand.java
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/WXCS_96159/!svn/ver/69/trunk/wifi-wap/src/com/aspire/wifi/wap/ftpUtil/UploadCommand.java
+END
+UploadFileCommand.java
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/WXCS_96159/!svn/ver/70/trunk/wifi-wap/src/com/aspire/wifi/wap/ftpUtil/UploadFileCommand.java
+END
+UploadIntfFileCommand.java
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/WXCS_96159/!svn/ver/14/trunk/wifi-wap/src/com/aspire/wifi/wap/ftpUtil/UploadIntfFileCommand.java
+END
+DownloadCommand.java
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/WXCS_96159/!svn/ver/66/trunk/wifi-wap/src/com/aspire/wifi/wap/ftpUtil/DownloadCommand.java
+END
+FTPAccount.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/WXCS_96159/!svn/ver/14/trunk/wifi-wap/src/com/aspire/wifi/wap/ftpUtil/FTPAccount.java
+END
+FTPCommand.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/WXCS_96159/!svn/ver/14/trunk/wifi-wap/src/com/aspire/wifi/wap/ftpUtil/FTPCommand.java
+END

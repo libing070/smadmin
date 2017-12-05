@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+    <!DOCTYPE mapper 
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.aspire.wifi.wap.mapper.MobileReplyReviewMapper">
+	<resultMap type="com.aspire.wifi.wap.entity.MobileReplyReviewEntity" id="MobileReplyReviewEntity">
+		<result column="mobile" property="mobile" />
+		<result column="last_click_reply_time" property="lastClickReplyTime" />
+		<result column="last_click_praise_time" property="lastClickPraiseTime" />
+		
+			
+	</resultMap>
+	<!-- 查询当前用户（手机号码）是否存在记录-->
+	<select id="queryMymrrCount" parameterType="String" resultType="integer">
+		Select count(*) from mobile_reply_review m where  
+		m.mobile=#{mobile}	
+	</select>
+	
+	<!-- 新增赞的内容 -->
+	<insert id="addMymrrZanInfo" parameterType="com.aspire.wifi.wap.entity.MobileReplyReviewEntity">
+		insert into mobile_reply_review(mobile,last_click_reply_time,last_click_praise_time)  
+		values
+		(#{mobile},now(),now())
+	</insert>
+
+	<!-- 更新评论的内容 -->
+	<update id="updateMymrrReplyInfo" parameterType="com.aspire.wifi.wap.entity.MobileReplyReviewEntity">
+		update   mobile_reply_review set 
+		<if test="lastClickReplyTime != null and lastClickReplyTime != ''">
+			last_click_reply_time=now()
+		</if>
+	
+		<if test="lastClickPraiseTime != null and lastClickPraiseTime != ''">
+			last_click_praise_time=now()
+		</if>
+		where mobile=#{mobile}
+	</update>
+</mapper>

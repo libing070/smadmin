@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+    <!DOCTYPE mapper 
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aspire.wifi.wap.mapper.VideoInfoMapper">
+	<resultMap type="com.aspire.wifi.wap.entity.VideoInfo" id="videoInfo">
+
+		<result column="video_id" property="videoId" />
+		<result column="video_name" property="videoName" />
+		<result column="video_type" property="videoType" />
+	   <result column="video_pic" property="videoPic" javaType="byte[]" jdbcType="BLOB" typeHandler="org.apache.ibatis.type.BlobTypeHandler" />	
+		<result column="show_time_long" property="showTimeLong" />		
+		<result column="video_desc" property="videoDesc" />		
+		<result column="play_cnt" property="playCnt" />		
+		<result column="resource_path" property="resourcePath" />		
+		<result column="is_top_area" property="isTopArea" />		
+	   <result column="video_top_pic" property="videoTopPic" javaType="byte[]" jdbcType="BLOB" typeHandler="org.apache.ibatis.type.BlobTypeHandler" />	
+	</resultMap>
+	<!-- 查询视频信息 -->
+	<sql id="queryVideoInfoDomain">
+		select vi.video_id,vi.video_name,vi.video_type,vi.video_desc,vi.play_cnt,vi.resource_path,vi.is_top_area from video_info vi where vi.video_status=1 
+	</sql>
+	<!-- 条件 -->
+	<sql id="queryVideoInfolimit">
+		<if test="videoName != null and videoName != ''">
+						and	vi.video_name like concat('%', #{videoName}, '%')
+		</if>
+		<if test="videoId!= 0 and videoId != '0'">
+						and	vi.video_id=#{videoId}
+		</if>
+	order by  vi.last_update_time	desc
+	limit #{begin},#{times}
+	</sql>
+	<!-- 查询所有免费视频(分页查询) -->
+	<select id="selectVideoInfo" parameterType="com.aspire.wifi.wap.entity.VideoInfo" resultMap="videoInfo">
+	select * from 
+	((
+		<include refid="queryVideoInfoDomain"/>
+		and vi.video_type=1 
+		<include refid="queryVideoInfolimit"/>
+		) 
+	union all 
+	(
+		<include refid="queryVideoInfoDomain"/>
+		and vi.video_type=2 
+		<include refid="queryVideoInfolimit"/>
+	) 
+	union all 
+	(
+		<include refid="queryVideoInfoDomain"/>
+		and vi.video_type=3 
+		<include refid="queryVideoInfolimit"/>
+	)) a
+
+		
+	</select>
+	<!-- 查询所有免费视频(首页) -->
+	<select id="selectVideoIndexInfo" parameterType="com.aspire.wifi.wap.entity.VideoInfo" resultMap="videoInfo">
+	<include refid="queryVideoInfoDomain"/>
+	and	 vi.is_top_area=0
+	<if test="videoName != null and videoName != ''">
+						and	vi.video_name like concat('%', #{videoName}, '%') 
+						and vi.video_id !=#{videoId}
+	</if>
+	<if test="videoType != null and videoType != ''">
+						and	vi.video_type= #{videoType}
+						and vi.video_id !=#{videoId}
+	</if>
+	order by  vi.last_update_time	desc
+	limit #{begin},#{times}
+	
+	</select>
+	<!-- 查询首页免费视频广告视频 -->
+	<select id="selectVideoIndexTopInfo" parameterType="com.aspire.wifi.wap.entity.VideoInfo" resultMap="videoInfo">
+
+	<include refid="queryVideoInfoDomain"/>
+	and	 vi.is_top_area=1
+	order by  vi.last_update_time	desc
+	limit #{begin},#{times}
+	
+	
+	</select>
+	<!-- 查询所对应Id的视频显示图片 -->
+	<select id="selectVideoPicById" parameterType="String" resultMap="videoInfo">
+		select vi.video_pic,vi.video_top_pic from video_info vi 
+		where vi.video_id=#{videoId}
+	</select>
+	
+</mapper>

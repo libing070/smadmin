@@ -1,0 +1,52 @@
+@charset "utf-8";
+/* CSS Document */
+
+
+/*刮刮卡*/
+.guahongbao-bg{background-color:#e43f3f; overflow:hidden;}
+.guahongbao-bg2{
+	background-color:#e43f3f;
+	overflow:hidden;
+	background-image: url(../images/guajiang/head02.jpg);
+	background-repeat: no-repeat;
+	background-position: center top;
+	background-size:100%;
+	padding-bottom:20px;
+}
+.guahongbao-guize{background-color:#900; color:#FFF; font-size:1.3em; padding:5px 10px;}
+.guahongbao-guajiang-l{
+	background-image: url(../images/guajiang/border_l.png);
+	background-repeat: repeat-y;
+	background-position: right;
+	background-size:12px auto;
+	min-width:12px;
+}
+.guahongbao-guajiang-m{width:250px;}
+.guahongbao-guajiang-m .top{
+	background-image: url(../images/guajiang/border_top.png);
+	background-repeat: repeat-x;
+	background-position: left bottom;
+	height:10px;
+}
+.guahongbao-guajiang-m .m{
+	background-color:#FFF;
+	text-align:center;
+}
+.guahongbao-guajiang-m .bottom{
+	background-image: url(../images/guajiang/border_bottom.png);
+	background-repeat: repeat-x;
+	background-position: left top;
+	height:10px;
+}
+.guahongbao-guajiang-r{
+	background-image: url(../images/guajiang/border_r.png);
+	background-repeat: repeat-y;
+	background-position: left;
+	background-size:12px auto;
+	min-width:12px;
+}
+.gua-btn1{background-color:#e43f3f; text-align:center; color:#FFF; padding:10px; font-size:1.2em; border-radius:6px;}
+.gua-btn2{background-color:#ff8e08; text-align:center; color:#FFF; padding:10px; font-size:1.2em; border-radius:6px;}
+.gua-small{font-size:0.8em;}
+.gua-big{font-size:2em;}
+.gua-zengsongtext{line-height:2em;}

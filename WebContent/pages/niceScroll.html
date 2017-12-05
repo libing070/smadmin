@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<div id="viewportdiv"
+		style="width: 300px; border: 1px solid red; height: 200px">
+		<div id="wrapperdiv" style="width: 500px; height: 400px">
+			<ul>
+               <li>1111111111</li>
+               <li>2222222222</li>
+               <li>3333333333</li>
+               <li>4444444444</li>
+               <li>5555555555</li>
+               <li>6666666666</li>
+               <li>7777777777</li>
+               <li>8888888888</li>
+               <li>1111111111</li>
+               <li>2222222222</li>
+               <li>3333333333</li>
+               <li>4444444444</li>
+               <li>5555555555</li>
+               <li>6666666666</li>
+               <li>7777777777</li>
+               <li>8888888888</li>
+			</ul>
+		</div>
+	</div>
+</body>
+
+<script src="js/jquery-1.10.2.min.js"></script>
+<script src="js/jquery.nicescroll.min.js"></script>
+<script>
+	$(document).ready(function() {
+		 var h = parseInt($('#wrapperdiv ul').height());
+		 alert(h);
+		$("#viewportdiv").niceScroll("#wrapperdiv", {
+			cursorcolor : "rgb(204, 204, 204)"
+		});
+	});
+</script>
+</html>

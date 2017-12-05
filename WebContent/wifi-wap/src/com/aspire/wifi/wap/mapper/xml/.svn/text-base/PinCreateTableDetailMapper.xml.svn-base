@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper 
+          PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+          "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aspire.wifi.wap.mapper.PinCreateTableDetailMapper">
+	<resultMap type="com.aspire.wifi.wap.entity.PinCreateTableDetailEntity" id="pinCreateTableDetailEntity">
+		<result column="flash_sale_id" property="flashSaleId" />
+		<result column="mobile" property="mobile" />
+		<result column="nickname" property="nickName" />
+		<result column="join_date" property="joinDate" />
+		<result column="createDate" property="createDate" />
+		<result column="is_owner_mobile" property="isOwnerMobile" />
+	</resultMap>
+	
+	<!-- 获取拼桌成员名单 -->
+	<select id="listPinZhuoMember" resultMap="pinCreateTableDetailEntity" parameterType="java.util.HashMap">
+		<![CDATA[
+		select dt.*, ui.nickname
+		  from user_info ui, pin_createtable_detail dt
+		 where ui.mobile = dt.mobile
+		   and dt.flash_sale_id = #{flashSaleId}
+		]]>
+		<if test="isOwnerMobile != null">
+		   and dt.is_owner_mobile = #{isOwnerMobile}
+		</if>
+		<if test="mobile != null">
+		   and dt.mobile = #{mobile}
+		</if>
+		<![CDATA[
+		 order by dt.join_date		
+		]]>
+	</select>
+	
+	<!-- 插入拼桌成员信息 -->
+	<insert id="insertPinCreateTableDetails" parameterType="pinCreateTableDetailEntity">
+	<![CDATA[
+		insert into pin_createtable_detail
+		  (flash_sale_id, mobile, join_date, is_owner_mobile)
+		values
+		  (#{flashSaleId}, #{mobile}, now(), #{isOwnerMobile})
+	]]>
+	</insert>
+	
+	<delete id="deletePinZhuoMember" parameterType="java.util.HashMap">
+		<![CDATA[
+		delete from pin_createtable_detail
+		 where flash_sale_id = #{flashSaleId}
+		   and mobile = #{mobile}
+		]]>
+	</delete>
+	
+	<!-- 插入桌主成员信息 -->
+	<insert id="addCreateTableZhuozhu" parameterType="pinCreateTableDetailEntity">
+	<![CDATA[
+		insert into pin_createtable_detail
+		  (flash_sale_id, mobile, join_date, is_owner_mobile)
+		values
+		  (#{flashSaleId}, #{mobile}, #{joinDate}, #{isOwnerMobile})
+	]]>
+	</insert>
+	
+	<!-- 获取拼桌的人员名单 -->
+	<select id="pinDanList" resultMap="pinCreateTableDetailEntity">
+	select
+		pcd.mobile,date_format(pcd.join_date,'%m月 %d日') createDate,pcd.is_owner_mobile
+	from pin_createtable_detail pcd where 1=1 ORDER BY pcd.join_date desc
+ limit 0,10
+	</select>
+		<!-- 更新足迹状态 -->	
+	<update id="updateFootStatus" parameterType="String">
+		<![CDATA[
+		update pin_createtable_detail
+		   set is_footmark = 1
+		 where flash_sale_id = #{flashSaleId}
+		]]>
+	</update>
+</mapper>

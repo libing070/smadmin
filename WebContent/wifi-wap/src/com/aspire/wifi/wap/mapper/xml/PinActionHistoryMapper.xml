@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <!DOCTYPE mapper 
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aspire.wifi.wap.mapper.PinActionHistoryMapper">
+<resultMap type="com.aspire.wifi.wap.entity.PinActionHistoryEntity" id="PinActionHistory">
+		<result column="hist_id" property="histId" />
+		<result column="flash_sale_id" property="flashSaleId" />
+		<result column="owner_mobile" property="ownerMobile" />
+		<result column="action_date" property="actionDate" />
+		<result column="action_type" property="actionType" />
+		<result column="action_desc" property="actionDesc" />
+		<result column="flash_sale_date" property="flashSaleDate" />
+		<result column="createtable_date" property="createTableDate" />
+</resultMap>
+
+<!-- 插入抢单成功后的信息 -->
+<insert id="addPinActionHistory" parameterType="com.aspire.wifi.wap.entity.PinActionHistoryEntity">
+insert into pin_action_hist(flash_sale_id,owner_mobile,action_date,action_type,action_desc,flash_sale_date,createtable_date)
+values(#{flashSaleId},#{ownerMobile},#{actionDate},#{actionType},#{actionDesc},#{flashSaleDate},#{createTableDate})
+</insert>
+
+<!-- 查看历史记录的数量 -->
+<select id="queryHistoryCountByMoblie" resultType="Integer" parameterType="String">
+select count(*) from pin_action pt where 1=1 and owner_mobile=#{ownerMobile}
+</select>
+</mapper>

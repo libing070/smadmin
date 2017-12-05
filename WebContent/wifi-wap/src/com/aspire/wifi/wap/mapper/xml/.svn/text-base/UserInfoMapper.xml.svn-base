@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+    <!DOCTYPE mapper 
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.aspire.wifi.wap.mapper.UserInfoMapper">
+	<resultMap type="com.aspire.wifi.wap.entity.UserInfoEntity" id="userInfo">
+		<result column="mobile" 	property="mobile" />
+		<result column="nickname" 	property="nickname" />
+		<result column="sex" 		property="sex" />		
+		<!-- <result column="head_show" 	property="head_show" />	 -->
+		<result column="head_show" property="head_show" javaType="byte[]" jdbcType="BLOB" typeHandler="org.apache.ibatis.type.BlobTypeHandler" />	
+		<result column="province" 	property="province" />		
+		<result column="province_id" 	property="provinceId" />		
+		<result column="city" 		property="city" />		
+		<result column="reg_date" 	property="reg_date" />		
+		<result column="sure_regDate" 	property="sure_regDate" />		
+		<result column="onlyId" 	property="onlyId" />		
+	</resultMap>
+	
+	<resultMap type="com.aspire.wifi.wap.entity.UserInfoEntity" id="provinceName">
+		<result column="province_id" 	property="provinceId" />		
+		<result column="province_name" 	property="province" />		
+		<result column="city_name" 		property="city" />		
+		<result column="city_id" 		property="cityId" />
+	</resultMap>
+	<!-- 查询用户信息 -->
+	<select id="queryUserInfo" parameterType="String" resultMap="userInfo">
+		select  u.mobile,u.nickname,u.sex,u.head_show,u.province,u.city,u.reg_date,u.onlyId from user_info u
+						where u.mobile=#{mobile}
+	</select>
+	<!-- 查询用户信息 -->
+	<select id="queryUserInfoByNickName" parameterType="String" resultMap="userInfo">
+		select  u.mobile,u.nickname,u.sex,u.head_show,u.province,u.city,u.reg_date from user_info u
+						where u.nickname=#{nickName}
+	</select>
+	<!-- 查询马甲号用户信息 -->
+	<select id="queryUserInfoByRegDate" parameterType="com.aspire.wifi.wap.entity.UserInfoEntity" resultType="integer">
+		select  count(*) from user_info u
+						where u.sure_regDate=#{sure_regDate} and u.mobile=#{mobile}
+	</select>
+
+	
+	<!-- 新增用户信息 -->
+	<insert id="addUserInfo" parameterType="com.aspire.wifi.wap.entity.UserInfoEntity">
+		insert into user_info (
+									mobile,	
+									nickname,
+									sex,					
+									reg_date,
+									sure_regDate,
+									onlyId
+								) 
+								values
+								(  
+									#{mobile},	
+									#{nickname},
+									#{sex},					
+									#{reg_date},
+									now(),
+									#{onlyId}
+								)						
+	</insert>
+		<!-- 修改用户信息并保存 -->
+	<update id="updateUserInfo" parameterType="com.aspire.wifi.wap.entity.UserInfoEntity">
+		update  user_info u set
+				<if test="sex != null and sex != ''">
+								u.sex=#{sex},
+				</if>
+				<if test="province != null and province != ''">
+								u.province=#{province},
+				</if>
+				<if test="city != null and city != ''">
+								u.city=#{city},
+				</if>
+				<if test="nickname != null and nickname != ''">
+								u.nickname=#{nickname}
+				</if>
+				<!-- 修改图片 -->
+				<if test="head_show != null and head_show != ''">
+								u.head_show=#{head_show}
+				</if>
+				
+								where
+									u.mobile=#{mobile}						
+										
+	</update>
+	
+	<select id="searchProvinceNameList" resultMap="provinceName">
+		select distinct t.province_name,t.province_id from hometown t
+	</select>
+	<select id="searchProvinceId" resultType="String" parameterType="String">
+		select distinct t.province_id from hometown t where t.province_name=#{province}
+	</select>
+	
+	<select id="searchCityNameList" resultMap="provinceName" parameterType="com.aspire.wifi.wap.entity.UserInfoEntity">
+		select t.city_name,t.city_id from hometown t where t.province_id=#{provinceId}
+	</select>
+	<!-- 查询唯一标识符的最大值 -->
+	<select id="searchMaxOnlyId" resultType="integer">
+		SELECT (MAX(onlyId)+1) from user_info
+	</select>
+	<!-- 查询用户信息 -->
+	<select id="queryUserInfoByOnlyId" parameterType="java.util.HashMap" resultMap="userInfo">
+	select  u.mobile,u.nickname,u.sex,u.head_show,u.province,u.city,u.reg_date from user_info u,zhuanfa_action z
+						where u.mobile = z.mobile and z.zhuanfa_id=#{zhuanFaId} ORDER BY z.create_time
+	</select>
+		<!-- 查询-->
+	<select id="nickname" resultMap="userInfo">
+		SELECT * FROM user_info  WHERE nickname>10000000000 limit 0,200						
+	</select>
+</mapper>

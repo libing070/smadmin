@@ -1,0 +1,200 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p" xmlns:cache="http://www.springframework.org/schema/cache"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xsi:schemaLocation="
+                    http://www.springframework.org/schema/beans
+                    http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+                    http://www.springframework.org/schema/tx 
+                    http://www.springframework.org/schema/tx/spring-tx-3.1.xsd
+                    http://www.springframework.org/schema/aop 
+                    http://www.springframework.org/schema/aop/spring-aop-3.1.xsd
+                    http://www.springframework.org/schema/context      
+                    http://www.springframework.org/schema/context/spring-context-3.1.xsd
+                    http://www.springframework.org/schema/cache 
+                    http://www.springframework.org/schema/cache/spring-cache-3.1.xsd
+                    
+                    http://www.springframework.org/schema/fex  
+                    http://www.springframework.org/schema/fex/spring-fex-1.5.xsd  
+                    http://www.springframework.org/schema/task   
+		            http://www.springframework.org/schema/task/spring-task-3.0.xsd                
+                   ">
+
+	<!-- ==========注解支持========== -->
+	<context:annotation-config />
+
+
+
+	<!-- ==========启动组件扫描，排除@Controller组件，该组件由SpringMVC配置文件扫描 ========== -->
+	<context:component-scan base-package="com.aspire.wifi">
+		<context:exclude-filter type="annotation"
+			expression="org.springframework.stereotype.Controller" />
+	</context:component-scan>
+	
+    <!-- ==========任务（pinAction起的一个任务）========== -->
+    <task:executor id="executor" pool-size="5" />  
+    <task:scheduler id="scheduler" pool-size="10" />  
+    <task:annotation-driven executor="executor" scheduler="scheduler" />
+
+	<!-- ==========属性文件位置 ========== 
+	<context:property-placeholder
+		location="file:${user.dir}/wifi-wap/conf/dataSource/mysql_jdbc.properties"
+		ignore-unresolvable="true" />
+	-->
+		
+	<!-- ==========数据源 ========== 
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
+		destroy-method="close">
+		<property name="driverClass" value="${jdbc.driverClassName}" />
+		<property name="jdbcUrl" value="${jdbc.url}" />
+		<property name="user" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+		<property name="initialPoolSize" value="5" />
+		<property name="minPoolSize" value="5" />
+		<property name="maxPoolSize" value="20" />
+		<property name="maxStatements" value="100" />
+		<property name="maxIdleTime" value="100" />
+		<property name="acquireIncrement" value="2" />
+		<property name="acquireRetryAttempts" value="10" />
+		<property name="acquireRetryDelay" value="600" />
+		<property name="idleConnectionTestPeriod" value="60" />
+	</bean>
+	-->
+	
+	<!--  jndi数据源使用方式 -->	
+	<bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+		<property name="jndiName"><value>java:comp/env/jdbc/wifi</value></property>
+	</bean>
+	
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	<tx:annotation-driven transaction-manager="transactionManager"/>
+	
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="mapperLocations" value="classpath:com/aspire/wifi/**/mapper/xml/*.xml" />
+		<property name="typeAliasesPackage" value="com.aspire.wifi.wap.entity,com.aspire.wifi.common.sms.entity,com.aspire.wifi.common.auth.entity" />
+	</bean>
+
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.aspire.wifi.**.mapper" />
+	</bean>
+
+	<!-- ==========自定义realm ========== -->
+	<bean id="shiroDbRealm" class="com.aspire.wifi.wap.shiro.ShiroDbRealm" />
+	<!-- ==========权限管理器========== -->
+	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+		<property name="realm" ref="shiroDbRealm" />
+	</bean>
+
+	<!-- Shiro Filter -->
+	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+		<property name="securityManager" ref="securityManager" />
+		<property name="loginUrl" value="/login" />
+		<property name="filterChainDefinitions">
+			<value>
+			 	[urls]
+				/login = anon
+				/dologin = anon
+				/doAutoLogin = anon
+				/loadLoginMobile = anon
+				/logout = logout
+				/index = anon
+				/pinDanList = anon
+				/getQiangDanDetails = anon
+				/getQiangDanTotalCount = anon
+				/queryTopTitle = anon
+				/pinzhuoCountPlus = anon
+				/searchheadlineList = anon
+				/headlineList = anon
+				/headlineAttachList = anon
+				/indexHeadlineList = anon
+				/listHeadlineComments = anon
+				/listHeadlineContentAttach = anon
+				/toutiao/toutiaoIndex = anon
+				/toutiao/toutiaoDetailIndex=anon
+				/findHeadlineContent = anon
+				/getPassWord = anon
+				/validateCode = anon
+				/isSign = anon
+				/queryNotice = anon
+				/tip = anon
+				/find/getVideoInfo = anon
+				/find/showAppByLimit = anon
+				/find/downloadFile = anon
+				/find/videoIndex = anon
+				/find/videoDetail = anon
+				/find/addVideoPlay = anon
+				/find/findVideoIcon = anon
+				/find/app = anon
+				/find/findAppDetail = anon
+				/find/findIcon= anon
+				/getHomeInfo = anon
+				/find/findIndex = anon
+				/find/videoList = anon
+				/yingxin_youhui = anon
+				/resources/** = anon
+				/my/findAttach = anon
+				/imageUpload.tv/* =anon
+				/listHeadlineReplyAttach =anon
+				/findHeadlineReply =anon
+				/shiyongContr =anon
+				/getShiYongPinLun =anon
+				/shiyongShareContr =anon
+				/queryMobileFormShiYong =anon
+				/shiyongKonwContr =anon
+				/getSendMsg =anon
+				/sendMobileMsg =anon
+				/getAcitivityByquyouhui =anon
+				/judetailContr =anon
+				/youhuiPinLun =anon
+				/youhuiMapContr =anon
+				/getzhuanfa =anon
+				/getZhuanFaNum =anon
+<<<<<<< .mine
+				/searchVersionAPI =anon
+=======
+		<!-- 		/s =anon
+				/a =anon -->
+>>>>>>> .r159
+				/ = anon
+				/** = authc
+			</value>
+		</property>
+	</bean>
+
+	<!-- 用户授权信息Cache -->
+	<bean id="cacheManager" class="org.apache.shiro.cache.MemoryConstrainedCacheManager" />
+	<bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor" />
+
+	<!-- AOP式方法级权限检查 -->
+	<bean
+		class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"
+		depends-on="lifecycleBeanPostProcessor">
+		<property name="proxyTargetClass" value="true" />
+	</bean>
+	
+	<bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">  
+		<property name="staticMethod" value="com.aspire.wifi.wap.shiro.ShiroAuthorizationHelper.setCacheManager" />  
+		<property name="arguments" ref="cacheManager"/>  
+	</bean>
+	
+	<bean
+		class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+		<property name="securityManager" ref="securityManager" />
+	</bean>
+
+	<!-- xssFilter -->
+	<bean id="xssFilter" class="com.aspire.wifi.wap.util.XSSFilter">  
+        <property name="filterChainDefinitions">  
+            <list>  
+                <!-- <value>^/module.*</value> -->  
+                <value>^/.*</value>  
+            </list>  
+        </property>     
+    </bean> 
+</beans>

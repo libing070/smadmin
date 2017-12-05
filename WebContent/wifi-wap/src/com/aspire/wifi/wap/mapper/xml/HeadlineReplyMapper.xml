@@ -1,0 +1,411 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+    <!DOCTYPE mapper 
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.aspire.wifi.wap.mapper.HeadlineReplyMapper">
+	<resultMap type="com.aspire.wifi.wap.entity.HeadlineReplyEntity" id="headlineReply">
+		<id column="reply_id" property="replyId" />
+		<result column="headline_id" property="headlineId" />
+		<result column="mobile" property="mobile" />
+		<result column="nickname" property="nickname" />
+		<result column="reply_type" property="replyType" />
+		<result column="content" property="content" />
+        <result column="orig_content" property="origContent" />
+		<result column="parent_reply_id" property="parentReplyId" />
+		<result column="parent_mobile" property="parentMobile" />
+        <result column="parent_nickname" property="parentNickName" />
+		<result column="reply_date" property="replyDate" />
+        <result column="reply_date_string" property="replyStringDate" />
+		<result column="audit_user" property="auditUser" />
+		<result column="audit_time" property="auditTime" />
+		<result column="audit_comment" property="auditComment" />
+		<result column="status" property="status" />
+		<result column="headtitle" property="headtitle" />
+		<result column="headContent" property="headContent" />
+		<result column="headPic" property="headPic" />
+		<result column="headNickName" property="headNickName" />
+	    <result column="parent_nickname_reply_prefix" property="parentNickNameReplyPrefix" />
+	    <result column="last_reply_date" property="lastReplyDate" />
+	   
+	</resultMap>
+	<resultMap type="com.aspire.wifi.wap.entity.HeadlineContentAttachEntity" id="byteMapContentAttach">
+        <result column="picture" property="picture" javaType="byte[]" jdbcType="BLOB" typeHandler="org.apache.ibatis.type.BlobTypeHandler" />
+     </resultMap>
+     <resultMap type="com.aspire.wifi.wap.entity.HeadlineReplyAttachEntity" id="headlineReplyAttach">
+		<result column="reply_id" property="replyId" />
+        <result column="picture" property="picture" javaType="byte[]" jdbcType="BLOB" typeHandler="org.apache.ibatis.type.BlobTypeHandler" />
+		<result column="picture_serialnum" property="pictureSerialnum" />
+	</resultMap>
+	<!-- 查询关于我的评论回复的总记录 (必须是审核通过或者是未审核，且不是回复头条的)-->
+	<select id="queryMyReplyCount" parameterType="String" resultType="integer">
+		select sum(b.a) from (	Select count(*) a from headline_reply h,mobile_reply_review m where  h.mobile=m.mobile and 
+		h.mobile=#{mobile} and 
+		h.reply_type=1 and 
+		h.status in(0,2) and 
+		h.reply_date>m.last_click_reply_time union all 
+    Select count(*) a from headline_reply h,mobile_reply_review m where  h.parent_mobile=m.mobile
+        and  h.mobile!=m.mobile and 
+		 h.parent_mobile=#{mobile} and 
+		h.reply_type=1 and 
+		h.status in(0,2) and 
+		h.reply_date>m.last_click_reply_time         
+        ) b
+
+	</select>
+	<!-- 查询未读的赞数量-->
+	<select id="queryMyZanCount" parameterType="String" resultType="integer">
+		select sum(a) FROM (Select count(*) a from headline_reply h,mobile_reply_review m where 
+		h.parent_mobile = m.mobile and  
+		h.parent_mobile=#{mobile}
+		and h.reply_type=2 and 
+		h.reply_date>m.last_click_praise_time
+
+UNION ALL 
+Select count(*) a from headline_reply h,mobile_reply_review m where 
+		h.mobile = m.mobile and  
+		h.mobile=#{mobile}
+		and h.reply_type=2 and 
+		h.reply_date>m.last_click_praise_time) t
+	</select>
+	<!-- 查询关于我的赞列表-->
+	<select id="queryMyZanInfo" parameterType="com.aspire.wifi.wap.entity.Parameter" resultMap="headlineReply">
+		select *
+		  from (select h.reply_id    replyId,
+		               h.headline_id headlineId,
+		               h.reply_date  replyDate,
+		               hui.nickname    nickname,
+		               h.mobile      mobile,
+		               hcui.nickname   headNickName,
+		               hc.title      headtitle,
+		               hc.content    headContent
+		          from headline_reply h, 
+		               headline_content hc,
+		               user_info hui, 
+		               user_info hcui
+		         where h.mobile = hui.mobile
+		           and hc.mobile = hcui.mobile
+		           and h.headline_id = hc.headline_id
+		           and h.parent_reply_id = 0
+		           and h.parent_mobile = #{videoName}
+		           and h.mobile != #{videoName}
+		           and h.reply_type = 2
+		        union all
+		        select h.reply_id    replyId,
+		               h.headline_id headlineId,
+		               h.reply_date  replyDate,
+		               hui.nickname    nickname,
+		               h.mobile      mobile,
+		               hcui.nickname   headNickName,
+		               hc.title      headtitle,
+		               hc.content    headContent
+		          from headline_reply h, 
+		               headline_content hc,
+		               user_info hui, 
+		               user_info hcui
+		         where h.mobile = hui.mobile
+		           and hc.mobile = hcui.mobile
+		           and h.headline_id = hc.headline_id
+		           and h.parent_reply_id = 0
+		           and h.mobile = #{videoName}
+		           and h.reply_type = 2) a
+		 order by a.replyDate desc limit #{begin}, #{end}
+		
+	</select>
+	<!-- 查询对应头条的图片 -->
+	  <select id="findMyAttach" parameterType="string" resultMap="byteMapContentAttach">
+        SELECT
+            picture
+        FROM
+            headline_content_attach
+        WHERE
+            headline_id = #{headlineId}
+       </select>
+	<!-- 查询我的评论列表 -->
+	<select id="queryMyReplyInfo" parameterType="com.aspire.wifi.wap.entity.Parameter" resultMap="headlineReply">
+		select h.reply_id,
+		       h.headline_id,
+		       h.mobile,
+		       ui.nickname,
+		       h.content,
+		       h.parent_mobile,
+		       h.parent_reply_id,
+		       h.reply_date
+		  from headline_reply h, user_info ui
+		 where h.mobile = ui.mobile
+		   and h.status in (0, 2)
+		   and h.reply_type = 1 
+		 <if test="appName != null and appName != ''">
+		 	and (h.parent_mobile=#{appName} and h.mobile!=#{videoName} )
+		 </if>
+		 <if test="appName == null and videoName != ''">
+			and	h.mobile=#{videoName} 
+		 </if>
+		order by h.reply_date desc 
+		limit #{begin},#{end}
+	</select>
+	<!-- 根据父ID查查父亲的昵称(我评论别人的评论) -->
+	<select id="selectParentNameById" parameterType="String" resultType="String">
+		select nickname from user_info where mobile =(select h.mobile from headline_reply h where 
+		h.reply_id = #{parentReplyId})
+	</select>
+	<!-- 根据父ID查查父亲的昵称 （我评论别人的头条）-->
+    <select id="queryParentNameById" parameterType="String" resultType="String">
+		select nickname from user_info where mobile =(select hc.mobile from headline_content hc where 
+		hc.headline_id = #{headlineId})
+	</select>
+	<!--别人评论我的头条  -->
+	<!-- 删除评论 ,删除赞 -->
+	<delete id="delZan" parameterType="String">
+	 <![CDATA[
+	     delete  from  headline_reply where reply_id=#{id}
+	  ]]>
+	</delete>
+	<!-- 新增回复赞,回复评论的内容 -->
+	<insert id="addMyZanInfo" parameterType="com.aspire.wifi.wap.entity.HeadlineReplyEntity">
+		insert into headline_reply(headline_id,mobile,nickname,reply_type,content,
+		parent_reply_id,parent_mobile,reply_date,status)  values
+		(#{headlineId},#{mobile},#{nickname},#{replyType},#{content},#{parentReplyId},#{parentMobile},now(),#{status})
+	</insert>
+    
+    <select id="queryHeadlineReply" parameterType="com.aspire.wifi.wap.entity.HeadlineReplyEntity" resultMap="headlineReply">
+    	<![CDATA[
+        SELECT hr.reply_id,
+		       hr.headline_id,
+		       hr.mobile,
+		       ui.nickname,
+		       hr.reply_type,
+		       hr.content,
+		       hr.orig_content,
+		       hr.parent_reply_id,
+		       hr.parent_mobile,
+		       pui.nickname AS parent_nickname,
+		       pui.nickname AS parent_nickname_reply_prefix,
+		       hr.reply_date,
+		       DATE_FORMAT(hr.reply_date, '%Y-%m-%d %H:%i:%S') AS reply_date_string,
+		       hr.audit_user,
+		       hr.audit_time,
+		       hr.audit_comment,
+		       hr.status
+		  FROM headline_reply hr, user_info ui, user_info pui
+		 WHERE hr.mobile = ui.mobile
+		   AND hr.parent_mobile = pui.mobile
+		   AND hr.headline_id = #{headlineId}
+		   AND hr.status in (0, 2)
+		]]>
+		<if test="mobile != null and mobile != ''">
+		   AND hr.mobile = #{mobile}
+		</if>
+		<if test="replyType != null and replyType != ''">
+			AND hr.reply_type = #{replyType}
+		</if>
+		<if test="status != null and status != ''">
+			AND hr.status = #{status}
+		</if>
+	    ORDER BY reply_id DESC
+	    LIMIT #{mysqlStart}, #{limit}
+    </select>
+
+    <select id="queryHeadlineReplyCount" parameterType="com.aspire.wifi.wap.entity.HeadlineReplyEntity" resultType="java.lang.Integer">
+      SELECT
+            COUNT(hr.reply_id)
+        FROM
+            headline_reply hr
+        WHERE
+	        hr.headline_id = #{headlineId}
+	        AND hr.status != 3 and hr.status != 1
+        <if test="mobile != null and mobile != ''">
+            AND hr.mobile = #{mobile}
+        </if>
+        <if test="replyType != null and replyType != ''">
+            AND hr.reply_type = #{replyType}
+        </if>
+        <if test="status != null and status != ''">
+            AND hr.status = #{status}
+        </if>
+    </select>
+
+    <select id="findHeadlineReply" parameterType="string" resultMap="headlineReply">
+        SELECT hr.reply_id,
+		       hr.headline_id,
+		       hr.mobile,
+		       ui.nickname,
+		       hr.reply_type,
+		       hr.content,
+		       hr.orig_content,
+		       hr.parent_reply_id,
+		       hr.parent_mobile,
+		       pui.nickname AS parent_nickname,
+		       pui.nickname AS parent_nickname_reply_prefix,
+		       hr.reply_date,
+		       DATE_FORMAT(hr.reply_date, '%Y-%m-%d %H:%i:%S') AS reply_date_string,
+		       hr.audit_user,
+		       hr.audit_time,
+		       hr.audit_comment,
+		       hr.status
+		  FROM headline_reply hr, user_info ui, user_info pui
+		 WHERE hr.mobile = ui.mobile
+		   AND hr.parent_mobile = pui.mobile
+	       AND hr.reply_id = #{replyId}
+    </select>
+
+    <insert id="insertComments" parameterType="com.aspire.wifi.wap.entity.HeadlineReplyEntity" useGeneratedKeys="true" keyProperty="replyId">
+      INSERT INTO headline_reply (
+            headline_id,
+            mobile,
+            nickname,
+            reply_type,
+            content,
+            orig_content,
+            parent_reply_id,
+            parent_mobile,
+            reply_date,
+            last_reply_date,
+            STATUS
+        ) VALUE (
+            #{headlineId}, #{mobile}, #{nickname}, #{replyType},
+            #{content}, #{origContent}, #{parentReplyId},
+            #{parentMobile}, NOW(),NOW(), #{status}
+        )
+    </insert>
+
+    <update id="updateHeadlineReply" parameterType="com.aspire.wifi.wap.entity.HeadlineReplyEntity">
+        UPDATE headline_reply
+        SET content = #{content}, last_reply_date = NOW()
+        <if test="headlineId != null and headlineId != ''">
+            , headline_id = #{headlineId}
+        </if>
+        <if test="status != null and status != ''">
+            , status = #{status}
+        </if>
+            
+        <if test="origContent != null and origContent != ''">
+            , orig_content = #{origContent}
+        </if>
+     
+        WHERE 1 = 1
+        <if test="headlineId != null and headlineId != ''">
+            AND headline_id = #{headlineId}
+        </if>
+        and reply_id = #{replyId}
+    </update>
+    <update id="updateReplyStatusById" parameterType="com.aspire.wifi.wap.entity.HeadlineReplyEntity">
+        UPDATE headline_reply
+        SET
+		 status = #{status}
+        WHERE 1 = 1
+            AND reply_id = #{replyId}
+    </update>
+
+    <insert id="voteHeadlineContent" parameterType="com.aspire.wifi.wap.entity.HeadlineReplyEntity">
+        INSERT INTO headline_reply (
+            headline_id,
+            mobile,
+            nickname,
+            reply_type,
+            parent_reply_id,
+            parent_mobile
+        ) VALUE (
+            #{headlineId}, #{mobile}, #{nickname},
+            #{replyType}, #{parentReplyId},
+            #{parentMobile}
+        )
+    </insert>
+	<!-- 根据父ID查查父亲的号码 （我评论别人的头条）-->
+    <select id="queryParentMobileById" parameterType="String" resultType="String">
+		select hc.mobile from headline_content hc where 
+		hc.headline_id = #{headlineId}
+	</select>
+	
+	<!-- 查询我的使用品的评论-->
+    <select id="queryShiYongByMobile" parameterType="java.util.HashMap"  resultMap="headlineReply">
+		select hr.reply_id,
+		       hr.headline_id,
+		       hr.mobile,
+		       u.nickname,
+		       hr.reply_type,
+		       hr.content,
+		       hr.orig_content,
+		       hr.parent_reply_id,
+		       hr.parent_mobile,
+		       hr.reply_date,
+		       DATE_FORMAT(hr.reply_date, '%Y-%m-%d %H:%i:%S') AS reply_date_string,
+		       hr.audit_user,
+		       hr.audit_time,
+		       hr.audit_comment,
+		       hr.status
+		        from headline_reply hr,user_info u where hr.mobile=u.mobile and
+		      <if test="mobile != null and mobile != ''">
+            	hr.mobile = #{mobile} and
+        	</if>     
+		        
+		  hr.reply_type=3 order by hr.last_reply_date desc
+		   <if test="flag != null and flag != ''">
+            	limit #{begin},#{times}
+        	</if>  
+	</select>
+	
+		<!-- 根据id查询评论-->
+    <select id="queryReplyById" parameterType="String" resultMap="headlineReply">
+		select  hr.* from headline_reply hr where 
+		hr.reply_id = #{replyId}
+	</select>
+	
+	<delete id="deleteReAttachByNum" parameterType="String">
+        DELETE FROM headline_reply_attach WHERE picture_serialnum = #{pictureSerialnum}
+    </delete>
+     <select id="findReAttach" parameterType="string" resultMap="headlineReplyAttach">
+        SELECT
+            *
+        FROM
+            headline_reply_attach
+        WHERE
+            picture_serialnum = #{pictureSerialnum}
+    </select>
+    <insert id="uploadHeadlineReplyAttach" parameterType="com.aspire.wifi.wap.entity.HeadlineReplyAttachEntity" useGeneratedKeys="true" keyProperty="pictureSerialnum">
+        INSERT INTO headline_reply_attach (
+            reply_id,
+            picture
+        )
+        VALUE
+            (#{replyId}, #{picture})
+    </insert>
+    <select id="queryReplyAttach" parameterType="string" resultMap="headlineReplyAttach">
+		SELECT DISTINCT
+            h.reply_id,
+            h.picture,
+            h.picture_serialnum
+        FROM
+            headline_reply_attach h
+		where h.reply_id = #{replyId}
+	</select>
+	<!-- 查询优惠活动的评论记录 -->
+    <select id="queryReplyByReplyType" parameterType="java.util.HashMap" resultMap="headlineReply">
+		select hr.reply_id,
+		       hr.headline_id,
+		       hr.mobile,
+		       u.nickname,
+		       hr.reply_type,
+		       hr.content,
+		       hr.orig_content,
+		       hr.parent_reply_id,
+		       hr.parent_mobile,
+		       hr.reply_date,
+		       DATE_FORMAT(hr.reply_date, '%Y-%m-%d %H:%i:%S') AS reply_date_string,
+		       hr.audit_user,
+		       hr.audit_time,
+		       hr.audit_comment,
+		       hr.status
+		        from headline_reply hr,user_info u where hr.mobile=u.mobile and
+		   <if test="replyType != null and replyType != ''">
+            	hr.reply_type=#{replyType}  and
+        	</if> 
+		   <if test="parentReplyId != null and parentReplyId != ''">
+            	hr.parent_reply_id=#{parentReplyId}  and
+        	</if> 
+		    1=1 order by  hr.last_reply_date desc 
+		   <if test="flag != null and flag != ''">
+		    	limit #{begin},#{times}  
+		    </if>   
+	</select>
+</mapper>

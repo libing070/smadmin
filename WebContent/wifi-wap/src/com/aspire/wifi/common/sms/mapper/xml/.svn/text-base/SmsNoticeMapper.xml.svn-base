@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<!DOCTYPE mapper 
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        
+<mapper namespace="com.aspire.wifi.common.sms.mapper.SmsNoticeMapper">
+
+	<resultMap type="com.aspire.wifi.common.sms.entity.SmsSendMsg" id="smsSendMsg">
+		<result column="id" property="id" />
+		<result column="mobile" property="mobile" />
+		<result column="content" property="content" />
+		<result column="priority" property="priority" />
+		<result column="create_time" property="createTime" />
+		<result column="send_status" property="sendStatus" />
+		<result column="send_result" property="sendResult" />
+		<result column="send_time" property="sendTime" />
+		<result column="retry_times" property="retryTimes" />
+		<result column="gw_sms_id" property="gwSmsId" />
+	</resultMap>
+
+	<!-- 查询待下发通知信息 -->
+	<select id="listSmsNotice" resultMap="smsSendMsg">
+		select *
+		  from sms_notice s
+		 where s.send_status = 0
+		 order by s.priority, s.create_time
+	</select>
+
+	<!-- 根据企业下行消息标识ID查询下发通知信息 -->
+	<select id="getSmsNoticeByGwSmsId" parameterType="java.lang.String" resultMap="smsSendMsg">
+		select *
+		  from sms_notice s
+		 where s.gw_sms_id = #{gwSmsId}
+	</select>
+
+	<!-- 新增短信下发通知信息 -->
+	<insert id="insertSmsNotice" parameterType="com.aspire.wifi.common.sms.entity.SmsSendMsg">
+		insert into sms_notice
+		  (id,
+		   mobile,
+		   content,
+		   priority,
+		   create_time,
+		   send_status,
+		   send_result,
+		   send_time,
+		   retry_times,
+		   gw_sms_id)
+		values
+		  (#{id},
+		   #{mobile},
+		   #{content},
+		   #{priority},
+		   #{createTime},
+		   #{sendStatus},
+		   #{sendResult},
+		   #{sendTime},
+		   #{retryTimes},
+		   #{gwSmsId})						
+	</insert>
+	
+	<!-- 修改短信下发通知信息 -->
+	<update id="updateSmsNotice" parameterType="com.aspire.wifi.common.sms.entity.SmsSendMsg">
+		update sms_notice
+		   set send_status = #{sendStatus},
+		       send_result = #{sendResult},
+		       send_time   = #{sendTime},
+		       retry_times = #{retryTimes},
+		       gw_sms_id   = #{gwSmsId}
+		 where id = #{id}					
+	</update>
+	
+</mapper> 

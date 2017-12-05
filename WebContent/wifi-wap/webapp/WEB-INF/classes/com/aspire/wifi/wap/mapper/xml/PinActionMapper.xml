@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <!DOCTYPE mapper 
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aspire.wifi.wap.mapper.PinActionMapper">
+	<resultMap type="com.aspire.wifi.wap.entity.PinActionEntity" id="PinAction">
+		<result column="flash_sale_id" property="flashSaleId" />
+		<result column="owner_mobile" property="ownerMobile" /><!-- 抢单号码 -->
+		<result column="flash_sale_date" property="flashSaleDate" /><!--抢单时间 -->
+		<result column="expired_date" property="expiredDate" /><!--抢单有效期 -->
+		<result column="createtable_date" property="createtableDate" /><!--创建桌时间 -->
+	</resultMap>
+	<!-- 抢单 -->
+	<insert id="doQiangDan" parameterType="com.aspire.wifi.wap.entity.PinActionEntity">
+		<![CDATA[
+		insert into pin_action (
+		       owner_mobile, 
+		       flash_sale_date, 
+		       expired_date, 
+		       createtable_date)
+		  select #{ownerMobile},
+		         now(),
+		         date_add(now(), interval pa.pin_action_invalidate minute),
+		         now()
+		    from pin_activity pa
+		   where activity_id = #{activityId}
+		     and pa.quota > (select count(1)
+		            from pin_action pt
+		           where date_format(pt.flash_sale_date, '%Y-%m-%d') = CURDATE())
+		]]>
+	</insert>
+
+	<!-- 查询每天的桌数 -->
+	<select id="everyDayCount" resultType="java.lang.Integer">
+		<![CDATA[
+		select count(1) as pin_count
+		  from pin_action pt
+		 where str_to_date(pt.flash_sale_date, '%Y-%m-%d') = CURDATE()
+		]]>
+	</select>
+
+	<!-- 更新组建创建桌的时间根据ID和手机号 -->
+	<update id="updateCreateDate" parameterType="com.aspire.wifi.wap.entity.PinActionEntity">
+		<![CDATA[
+		update pin_action
+		   set createtable_date = #{createtableDate}
+		 where flash_sale_id = #{flashSaleId}
+		   and owner_mobile = #{ownerMobile}
+		]]>
+	</update>
+
+
+	<!-- 光荣榜 -->
+	<select id="getQiangDanTopInfo" resultMap="PinAction">
+		<![CDATA[
+		select flash_sale_id,
+		       owner_mobile,
+		       flash_sale_date,
+		       expired_date,
+		       createtable_date
+		  from pin_action
+		 where 1 = 1
+		 order by flash_sale_date desc limit 90
+		]]>
+	</select>
+
+	<!-- 抢单过期删除 -->
+	<delete id="deleteDanByMobile" parameterType="String">
+		<![CDATA[
+		delete from pin_action
+		 where flash_sale_date = createtable_date
+		   and owner_mobile = #{ownerMobile}
+		]]>
+	</delete>
+
+	<!-- 返回抢单成功的信息 -->
+	<select id="getQiangDanList" resultMap="PinAction">
+		<![CDATA[
+		select p.flash_sale_id,
+		       p.owner_mobile,
+		       p.flash_sale_date,
+		       p.expired_date,
+		       p.createtable_date
+		  from pin_action p
+		 where 1 = 1
+		]]>
+	</select>
+
+	<!-- 根据手机号码查询当天的拼桌ID -->
+	<select id="queryIdByMobile" resultMap="PinAction" parameterType="String">
+		<![CDATA[
+		select pt.*
+		  from pin_action pt
+		 where str_to_date(pt.flash_sale_date, '%Y-%m-%d') = CURDATE()
+		   and owner_mobile = #{ownerMobile}
+		]]>
+	</select>
+
+	<!-- 根据手机号码查询当天参与的次数 -->
+	<select id="countByMobile" resultType="Integer" parameterType="String">
+		<![CDATA[
+		select count(*)
+		  from pin_action pt
+		 where str_to_date(pt.flash_sale_date, '%Y-%m-%d') = CURDATE()
+		   and owner_mobile = #{ownerMobile}
+		]]>
+	</select>
+
+
+	<!-- 根据手机号码查询是否是第一次抢桌 -->
+	<select id="queryMobileIsNN" resultType="Integer" parameterType="String">
+		<![CDATA[
+		select count(*)
+		  from pin_action pt
+		 where owner_mobile = #{ownerMobile}
+		]]>
+	</select>
+
+	<!-- 查询用户最近的一次创建桌 -->
+	<select id="queryLastTimeByMobile" resultMap="PinAction" parameterType="String">
+		<![CDATA[
+		select *
+		  from pin_action
+		 where owner_mobile = #{ownerMobile}
+		 order by createtable_date desc limit 1;
+		]]>
+	</select>
+</mapper>

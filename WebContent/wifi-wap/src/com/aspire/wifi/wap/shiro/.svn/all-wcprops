@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/WXCS_96159/!svn/ver/14/trunk/wifi-wap/src/com/aspire/wifi/wap/shiro
+END
+ShiroAuthorizationHelper.java
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/WXCS_96159/!svn/ver/14/trunk/wifi-wap/src/com/aspire/wifi/wap/shiro/ShiroAuthorizationHelper.java
+END
+ShiroDbRealm.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/WXCS_96159/!svn/ver/14/trunk/wifi-wap/src/com/aspire/wifi/wap/shiro/ShiroDbRealm.java
+END
+ShiroSecurityHelper.java
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/WXCS_96159/!svn/ver/14/trunk/wifi-wap/src/com/aspire/wifi/wap/shiro/ShiroSecurityHelper.java
+END

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-module
+  type="WEB"
+  name="wifi-wap"
+  id="myeclipse.1407289878082"
+  context-root="/wifi-wap"
+  j2ee-spec="6.0"
+  archive="wifi-wap.war">
+  <attributes>
+    <attribute name="webrootdir" value="webapp" />
+  </attributes>
+</project-module>
+

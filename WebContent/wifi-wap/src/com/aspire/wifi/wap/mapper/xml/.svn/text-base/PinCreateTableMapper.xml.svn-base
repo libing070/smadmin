@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper 
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aspire.wifi.wap.mapper.PinCreateTableMapper">
+	<resultMap type="com.aspire.wifi.wap.entity.PinCreateTableEntity" id="pinCreateTableEntity">
+		<result column="flash_sale_id" property="flashSaleId" />
+		<result column="act_desc" property="actDesc" />
+		<result column="act_type_id" property="actTypeId" />
+		<result column="act_status_id" property="actStatusId" />
+		<result column="consume_place_id" property="consumePlaceId" />
+		<result column="createtable_date" property="createTableDate" />
+		<result column="createtable_date_as_string" property="createTableDateString" />
+		<result column="expired_date" property="expireDate" />
+		<result column="owner_mobile" property="ownerMobile" />
+		<result column="consume_pic" property="consumePic" javaType="byte[]" jdbcType="BLOB" typeHandler="org.apache.ibatis.type.BlobTypeHandler" />
+		<result column="free_seat" property="freeSeat" />
+		<result column="audit_user" property="auditUser" />
+		<result column="audit_time" property="auditTime" />
+		<result column="audit_status" property="auditStatus" />
+		<result column="audit_comment" property="auditComment" />
+		<result column="nickname" property="nickName" />
+		<result column="mobile" property="mobile" />
+		
+		<result column="expired_days" property="expiredDays" />
+		<result column="verification_code" property="verificationCode" />
+		<result column="mo_sms_time" property="moSmsTime" />
+		<result column="joinned_member_count" property="joinnedMemberCount" />
+	</resultMap>
+
+    <resultMap type="java.util.HashMap" id="myActiveEntityPCT">
+        <id column="flash_sale_id" property="activeId" />
+        <result column="act_status_id" property="activeStatus" />
+        <result column="createtable_date" property="activeDate" />
+        <result column="createtable_date_as_string" property="activeDateString" />
+        <result column="owner_mobile" property="ownerMobile" />
+        <result column="active_type" property="activeType" />
+        <result column="is_owner_mobile" property="isOwnerMobile" />
+    </resultMap>
+
+	<select id="queryPinCreateTableList" resultMap="pinCreateTableEntity"
+		parameterType="java.util.HashMap">
+		<![CDATA[
+		select pc.*, inf.nickname,inf.mobile, datediff(pc.expired_date, now()) as expired_days, 
+               DATE_FORMAT(pc.createtable_date, '%Y-%m-%d %H:%i') as createtable_date_as_string,
+               (select count(1) from pin_createtable_detail pcd where pc.flash_sale_id = pcd.flash_sale_id) as joinned_member_count
+		  from pin_createtable pc, user_info inf
+		 where pc.owner_mobile = inf.mobile
+		   and pc.free_seat > 0
+		   and pc.act_status_id = 2
+		]]>
+		<if test="queryParm != null">
+			and (pc.owner_mobile like CONCAT('%', #{queryParm}, '%') 
+			or
+			inf.nickname like CONCAT('%', #{queryParm}, '%'))
+		</if>
+		<![CDATA[
+			order by pc.createtable_date desc 
+		]]>
+		<if test="totalRecordCount != null">
+			limit #{totalRecordCount}
+		</if>
+	</select>
+
+	<select id="getPinZhuoDetails" resultMap="pinCreateTableEntity" parameterType="java.util.HashMap">
+		<![CDATA[
+		select pc.*, inf.nickname, datediff(pc.expired_date, now()) as expired_days, 
+               DATE_FORMAT(pc.createtable_date, '%Y-%m-%d %H:%i') as createtable_date_as_string
+		  from pin_createtable pc, user_info inf
+		 where pc.owner_mobile = inf.mobile
+		   and pc.flash_sale_id = #{flashSaleId}
+		]]>
+	</select>
+	
+	<select id="getPinZhuoDetailsByVerifyCode" resultMap="pinCreateTableEntity" parameterType="java.util.HashMap">
+		<![CDATA[
+		select pc.*, inf.nickname, datediff(pc.expired_date, now()) as expired_days, 
+               DATE_FORMAT(pc.createtable_date, '%Y-%m-%d %H:%i') as createtable_date_as_string
+		  from pin_createtable pc, user_info inf
+		 where pc.owner_mobile = inf.mobile
+		   and pc.verification_code = #{verificationCode}
+		]]>
+	</select>
+	
+	<update id="updateFreeSeat" parameterType="java.util.HashMap">
+		<![CDATA[
+		update pin_createtable
+		   set free_seat = free_seat + #{changeValue}
+		 where flash_sale_id = #{flashSaleId}
+		   and (free_seat + #{changeValue}) >= 0 
+		]]>
+	</update>
+	
+	<update id="updatePinZhuoStatus" parameterType="java.util.HashMap">
+		<![CDATA[
+		update pin_createtable
+		   set act_status_id = #{actStatusId}
+		 where flash_sale_id = #{flashSaleId}
+		]]>
+	</update>
+	
+	<update id="activatePingZhuo" parameterType="java.util.HashMap">
+		<![CDATA[
+		update pin_createtable
+		   set act_status_id = 5,
+		   	   verification_code = #{verificationCode}
+		 where flash_sale_id = #{flashSaleId}
+		   and owner_mobile = #{ownerMobile}
+		   and act_status_id = 2
+		   and free_seat = 0
+		]]>
+	</update>
+
+	<update id="dismissPingZhuo" parameterType="java.util.HashMap">
+		<![CDATA[
+		update pin_createtable
+		   set act_status_id = 10
+		 where flash_sale_id = #{flashSaleId}
+		   and owner_mobile = #{ownerMobile}
+		   and act_status_id = 2
+		]]>
+	</update>
+		
+	<update id="auditPinZhuoImg" parameterType="java.util.HashMap">
+		<![CDATA[
+		update pin_createtable
+		   set act_status_id = 6
+		 where flash_sale_id = #{flashSaleId}
+		   and (act_status_id = 5 or act_status_id = 7)
+		]]>
+	</update>
+	
+	<update id="uploadPinZhuoImg" parameterType="com.aspire.wifi.wap.entity.PinCreateTableEntity">
+		<![CDATA[
+		update pin_createtable
+		   set consume_pic = #{consumePic}
+		 where flash_sale_id = #{flashSaleId}
+		]]>
+	</update>
+	
+	<update id="updateConsumePlace" parameterType="com.aspire.wifi.wap.entity.PinCreateTableEntity">
+		<![CDATA[
+		update pin_createtable
+		   set consume_place_id = #{consumePlaceId},
+		   	   mo_sms_time = now()
+		 where flash_sale_id = #{flashSaleId}
+		]]>
+	</update>
+	
+	<select id="checkVerificationCode" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		<![CDATA[
+		select count(1) as record_nums from pin_createtable where verification_code = #{verificationCode}
+		]]>
+	</select>
+		
+	<insert id="createPinZhuo" parameterType="com.aspire.wifi.wap.entity.PinCreateTableEntity">
+	insert into pin_createtable (flash_sale_id,act_desc,act_type_id,act_status_id,consume_place_id,createtable_date,expired_date,owner_mobile,consume_pic,free_seat,
+    audit_user,audit_time,audit_status,audit_comment)
+    values (#{flashSaleId},#{actDesc},#{actTypeId},#{actStatusId},#{consumePlaceId},#{createTableDate},#{expireDate},#{ownerMobile},#{consumePic},#{freeSeat},
+    #{auditUser},#{auditTime},#{auditStatus},#{auditComment})
+	
+	</insert>
+
+    <select id="listPinCreateTableDetail" parameterType="com.aspire.wifi.wap.entity.PinCreateTableEntity" resultMap="myActiveEntityPCT">
+  select a.flash_sale_id,a.act_status_id,a.createtable_date,a.owner_mobile,a.createtable_date_as_string,a.active_type,a.is_owner_mobile from (
+          SELECT DISTINCT p.flash_sale_id,
+		                p.act_status_id,
+		                p.createtable_date,
+		                p.owner_mobile,
+		                DATE_FORMAT(p.createtable_date, '%Y-%m-%d %H:%i:%S') AS createtable_date_as_string,
+		                '1' as active_type,
+		                d.is_owner_mobile as is_owner_mobile,
+										d.join_date
+				  FROM pin_createtable p, pin_createtable_detail d 
+				  WHERE p.flash_sale_id = d.flash_sale_id  
+				 	AND d.is_footmark = 0
+				 	AND d.is_owner_mobile = 1  
+				 	AND p.owner_mobile = #{ownerMobile}
+				UNION ALL
+				SELECT DISTINCT p.flash_sale_id,
+				                p.act_status_id,
+				                p.createtable_date,
+				                p.owner_mobile,
+				                DATE_FORMAT(p.createtable_date, '%Y-%m-%d %H:%i:%S') AS createtable_date_as_string,
+				                '1' as active_type,
+				                d.is_owner_mobile as is_owner_mobile,
+												d.join_date
+				  FROM pin_createtable p, pin_createtable_detail d
+				 WHERE p.flash_sale_id = d.flash_sale_id   
+				   AND d.is_footmark = 0
+				   AND d.is_owner_mobile = 0
+				   AND d.mobile = #{ownerMobile}) a order by a.join_date
+				   
+    </select>
+
+    <select id="listPinCreateTableDetailHis" parameterType="com.aspire.wifi.wap.entity.PinCreateTableEntity" resultMap="myActiveEntityPCT">
+    select a.flash_sale_id,a.act_status_id,a.createtable_date,a.owner_mobile,a.createtable_date_as_string,a.active_type,a.is_owner_mobile from (
+          SELECT DISTINCT p.flash_sale_id,
+		                p.act_status_id,
+		                p.createtable_date,
+		                p.owner_mobile,
+		                DATE_FORMAT(p.createtable_date, '%Y-%m-%d %H:%i:%S') AS createtable_date_as_string,
+		                '1' as active_type,
+		                d.is_owner_mobile as is_owner_mobile,
+										d.join_date
+				  FROM pin_createtable p, pin_createtable_detail d 
+				  WHERE p.flash_sale_id = d.flash_sale_id  
+				 	AND d.is_footmark = 1
+				 	AND p.act_status_id in(4, 8, 9, 10)
+				 	AND d.is_owner_mobile = 1  
+				 	AND p.owner_mobile = #{ownerMobile}
+				UNION ALL
+				SELECT DISTINCT p.flash_sale_id,
+				                p.act_status_id,
+				                p.createtable_date,
+				                p.owner_mobile,
+				                DATE_FORMAT(p.createtable_date, '%Y-%m-%d %H:%i:%S') AS createtable_date_as_string,
+				                '1' as active_type,
+				                d.is_owner_mobile as is_owner_mobile,
+												d.join_date
+				  FROM pin_createtable p, pin_createtable_detail d
+				 WHERE p.flash_sale_id = d.flash_sale_id   
+				   AND d.is_footmark = 1
+				   AND p.act_status_id in(4, 8, 9, 10)
+				   AND d.is_owner_mobile = 0
+				   AND d.mobile = #{ownerMobile}) a order by a.join_date
+    </select>
+    
+	<select id="checkActivityLimit" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+		<![CDATA[
+		SELECT SUM(act.activity_count) AS activity_total_count
+		  FROM (SELECT count(1) AS activity_count
+		          FROM pin_createtable p, pin_createtable_detail d 
+		         WHERE p.flash_sale_id = d.flash_sale_id and d.is_owner_mobile=#{isOwnerMobile}
+		           AND p.act_status_id not in (4, 8, 9, 10)
+		           AND d.mobile = #{mobile}
+		        UNION ALL
+		        SELECT count(1) AS activity_count
+		          FROM pin_createtable p, pin_createtable_detail d
+		         WHERE p.flash_sale_id = d.flash_sale_id and d.is_owner_mobile=#{isOwnerMobile}
+		           AND p.act_status_id not in (4, 10)
+		           AND (d.join_date between
+		               subdate(curdate(), date_format(curdate(), '%w') - 1) and
+		               subdate(curdate(), date_format(curdate(), '%w') - 7))
+		           AND d.mobile = #{mobile}) act
+		]]>		
+				   
+    </select>
+
+	<!-- 用户更新未能审核成功的信息 -->
+	<update id="updateCreateTableByMobile" parameterType="com.aspire.wifi.wap.entity.PinCreateTableEntity">
+	<![CDATA[
+		update pin_createtable
+		   set act_desc = #{actDesc}, 
+		   	   act_type_id = #{actTypeId}, 
+		   	   act_status_id = 1
+		 where owner_mobile = #{ownerMobile}
+		   and flash_sale_id = #{flashSaleId}
+		   and act_status_id = 3
+	]]>
+	</update>
+
+	<!-- 根据手机号码和ID进行查询 -->
+	<select id="querCreateTableByMobile" resultMap="pinCreateTableEntity" parameterType="com.aspire.wifi.wap.entity.PinCreateTableEntity">
+		select pc.*
+		  from pin_createtable pc
+		 where pc.flash_sale_id = #{flashSaleId}
+		   and pc.act_status_id = 3
+		   and pc.owner_mobile = #{ownerMobile}
+	</select>
+
+	<!-- 查询所有的信息 -->
+	<select id="queryAllList" resultMap="pinCreateTableEntity">
+		select * from pin_createtable where 1=1
+	</select>
+	<!-- 根据用户手机号码删除过期数据 -->
+	<delete id="deleteOverTimeByMobile" parameterType="String">
+		delete from pin_createtable where owner_mobile=#{ownerMobile}
+	</delete>
+
+	<!-- 根据用户手机号码以及ID更改状态 -->
+	<update id="updateOverTimeByMobile" parameterType="com.aspire.wifi.wap.entity.PinCreateTableEntity">
+		update pin_createtable
+		   set act_status_id = 4
+		 where owner_mobile = #{ownerMobile}
+		   and flash_sale_id = #{flashSaleId}
+	</update>
+
+	<!-- 根据手机号码以及ID查询单条记录 -->
+	<select id="querySingle" resultMap="pinCreateTableEntity">
+		select *
+		  from pin_createtable
+		 where owner_mobile = #{ownerMobile}
+		   and flash_sale_id = #{flashSaleId}
+	</select>
+</mapper>

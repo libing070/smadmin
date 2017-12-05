@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+    <!DOCTYPE mapper 
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aspire.wifi.wap.mapper.VideoPlayMapper">
+
+	<!-- 新增播放信息 -->
+	<insert id="insertVideoPlay" parameterType="com.aspire.wifi.wap.entity.VideoPlay">
+		insert into video_play (
+									video_id,						
+									mobile,
+									oper_date
+								) 
+								values
+								(  
+									#{videoId},						
+									#{mobile},		
+									now()	
+									
+								)						
+	</insert>
+	<!-- 查询播放记录数 -->
+	<select id="selectVideoPlayById" parameterType="com.aspire.wifi.wap.entity.VideoPlay" resultType="integer">
+			select count(1) from video_play vp where  vp.video_info_id = #{videoInfoId} and vp.msisdn = ${msisdn}
+	</select>
+	
+</mapper>

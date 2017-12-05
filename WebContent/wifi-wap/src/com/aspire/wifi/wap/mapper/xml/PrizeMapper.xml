@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <!DOCTYPE mapper 
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aspire.wifi.wap.mapper.PrizeMapper">
+	<resultMap type="com.aspire.wifi.wap.entity.PrizeEntity" id="prizeEntity">
+		<result column="id" property="id" />
+		<result column="prize_name" property="prizeName" />
+		<result column="prize_name" property="prizeName" />
+		<result column="create_time" property="createTime" />
+		<result column="activity_id" property="activityId" />
+		<result column="control_num" property="controlNum" />
+		<result column="prize_rate" property="prizeRate" />
+	</resultMap>
+	<!-- 查询奖品信息 -->
+	<select id="queryPrizeInfo" resultMap="prizeEntity" parameterType="java.util.HashMap">
+		select *
+            from prize_table where 1=1 
+            <if test="activityId != null">
+            	and activity_id=#{activityId}
+            </if>
+	</select>
+	
+	 <!-- 修改奖品信息-->
+	<update id="updatePrizeEntity" parameterType="java.util.HashMap" >
+		update  prize_table p set 
+				p.control_num=#{controlNum}
+				
+								where
+									p.id=#{id}						
+										
+	</update>
+	<!-- 查询是否为北京移动 -->
+	<select id="isBeijingMobile" resultType="int">
+		select count(1)
+            from beijing_mobile_table where 1=1 
+            	and mobile_duan=#{mobileDuan}
+	</select>
+</mapper>

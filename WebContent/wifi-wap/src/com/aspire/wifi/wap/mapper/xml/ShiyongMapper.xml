@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <!DOCTYPE mapper 
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aspire.wifi.wap.mapper.ShiyongMapper">
+	<resultMap type="com.aspire.wifi.wap.entity.PinActivityEntity" id="pinActivityEntity">
+		<result column="activity_name" property="activityName" />
+		<result column="quota" property="quota" />
+		<result column="activity_id" property="activityId" />
+		<result column="salePersonNum" property="salePersonNum" />
+	</resultMap>
+	<resultMap type="java.util.HashMap" id="shiYongEntitySR">
+		<result column="Id" property="id" />
+		<result column="owner_mobile" property="ownerMobile" />
+		<result column="create_time" property="createTime" />
+		<result column="activity_id" property="activityId" />
+		<result column="update_time" property="activeDateString" />
+		<result column="active_type" property="activeType" />
+		<result column="activity_name" property="activityName" />
+		<result column="custom_code" property="customCode" />
+		<result column="status_code" property="statusCode" />
+	</resultMap>
+	<resultMap type="com.aspire.wifi.wap.entity.ShiYongEntity" id="shiYongEntity">
+		<result column="Id" property="id" />
+		<result column="owner_mobile" property="ownerMobile" />
+		<result column="create_time" property="createTime" />
+		<result column="activity_id" property="activityId" />
+		<result column="update_time" property="updateTime" />
+		<result column="custom_code" property="customCode" />
+		<result column="quote" property="quote" />
+		<result column="activity_name" property="activityName" />
+		<result column="status_code" property="statusCode" />
+		
+	</resultMap>
+
+	<!-- 展示消费地点 -->
+	<select id="queryShiyongInfo" resultMap="pinActivityEntity">
+		select DISTINCT tab1.*,IFNULL(sa.activity_id,0) as salePersonNum
+            from (select t.activity_id,t.activity_name,t.quota from pin_activity t where t.activity_name='试用活动') tab1
+ 			left join shiyong_action sa on tab1.activity_id = sa.activity_id
+	</select>
+	
+	<select id="queryShiyongApplyCount" resultType="int" parameterType="int">
+		 select count(1) as cou from shiyong_action t where t.activity_id = #{activityId}
+	</select>
+	<!-- 查询我的试用申请记录 -->
+	<select id="queryShiyongByMobile" resultMap="shiYongEntitySR" parameterType="java.util.HashMap">
+		 select t.activity_id,t.Id,'3' AS active_type,p.activity_name,DATE_FORMAT(t.update_time, '%Y-%m-%d %H:%i:%S') AS update_time  from shiyong_action t,pin_activity p where t.activity_id=p.activity_id and t.owner_mobile = #{ownerMobile} and  t.activity_id=2 and t.status_code=#{statusCode}
+	</select>
+	<!-- 查询我的其他活动申请记录 -->
+	<select id="queryHuodong" resultMap="shiYongEntitySR" parameterType="java.util.HashMap">
+		 select t.activity_id,t.Id,'4' AS active_type,p.activity_name,DATE_FORMAT(t.update_time, '%Y-%m-%d %H:%i:%S') AS update_time  from shiyong_action t,pin_activity p where t.activity_id=p.activity_id and t.owner_mobile = #{ownerMobile} and  t.activity_id>2 and t.status_code=#{statusCode}
+		  
+	</select>
+    <!-- 新增使用 -->
+    <insert id="insertShiYongAction" parameterType="com.aspire.wifi.wap.entity.ShiYongEntity" useGeneratedKeys="true" keyProperty="id">
+     insert into shiyong_action(
+     owner_mobile,
+     create_time,
+     activity_id,
+     update_time,
+     custom_code
+     <if test="statusCode != null">
+     ,
+     status_code
+     </if>
+     ) values(
+     #{ownerMobile},
+     NOW(),
+     #{activityId},
+     NOW(),
+     #{customCode}
+  <if test="statusCode != null">
+     
+     ,
+     #{statusCode}
+     </if>
+     )
+    </insert>
+  
+    <!-- 修改quota -->
+    <update id="updatePinActivity" parameterType="int">
+      update pin_activity
+        set quota=quota-1
+        where activity_id=#{activityId}
+    </update><!--
+    
+    <select id="queryShiYongByMobileAndActivityId" resultType="int" parameterType="java.util.HashMap" >
+      select count(*) from shiyong_action where owner_mobile=#{ownerMobile} and activity_id=#{activityId}
+    </select>
+     --><select id="queryShiYongByMobileAndActivityId" statementType="CALLABLE" parameterType="java.util.HashMap">
+      <![CDATA[  
+    {call proc_bmw_select_shiyong_action(#{ownerMobile,mode=IN,jdbcType=VARCHAR},#{activityId,mode=IN,jdbcType=BIGINT},#{tempnum,mode=OUT,jdbcType=BIGINT},#{customCode,mode=OUT,jdbcType=VARCHAR})}
+     ]]> 
+   </select>
+    <!-- 根据ID查询优惠活动详细信息 -->
+	<select id="queryHuodongById" resultMap="shiYongEntity" parameterType="String">
+		 select t.*,p.cash_subsidy as quote,p.activity_name from shiyong_action t,pin_activity p where t.activity_id=p.activity_id and t.Id =  #{id} 
+	</select>
+	  <select id="queryCustomCodeByMobileAndActivityId" resultMap="shiYongEntitySR" parameterType="java.util.HashMap">
+     select * from shiyong_action where owner_mobile=#{ownerMobile} and activity_id=#{activityId} and status_code=0
+    </select>
+ <select id="queryshiyongDefine20" resultMap="shiYongEntity" parameterType="int">
+    select * from shiyong_action where activity_id=#{activityId} and  date(create_time)=curdate();
+    </select>
+       <!-- 查询该消费码是否存在以及是否使用 -->
+   <select id="queryshiyongexists" parameterType="java.util.HashMap" resultMap="shiYongEntity">
+   select * from shiyong_action where activity_id=#{id} 
+   <if test="xfm != null and xfm != ''">
+    	and custom_code=#{xfm}
+    </if>
+   <if test="ownerMobile != null and ownerMobile != ''">
+   		and  owner_mobile=#{ownerMobile}
+    </if>
+   </select>
+   <!-- 根据条件查询活动明细 -->
+   <select id="queryshiyongBylimit" parameterType="java.util.HashMap" resultMap="shiYongEntity">
+   select * from shiyong_action where activity_id=#{activityId} 
+   <if test="ownerMobile != null and ownerMobile != ''">
+   		and  owner_mobile=#{ownerMobile}
+    </if>
+   <if test="statusCode != null and statusCode != ''">
+   		and  status_code !=#{statusCode}
+    </if>
+   </select>
+   
+     <!-- 修改活动明细-->
+	<update id="updateShiYong" parameterType="com.aspire.wifi.wap.entity.ShiYongEntity">
+		update  shiyong_action s set 
+				s.status_code=#{statusCode}
+				
+								where
+									s.Id=#{id}						
+										
+	</update>
+</mapper>

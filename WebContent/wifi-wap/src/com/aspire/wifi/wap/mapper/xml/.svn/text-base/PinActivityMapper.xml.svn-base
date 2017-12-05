@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper 
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aspire.wifi.wap.mapper.PinActivityMapper">
+<resultMap type="com.aspire.wifi.wap.entity.PinActivityEntity" id="PinActivity">
+		<result column="activity_id" property="activityId" />
+		<result column="activity_name" property="activityName" />
+		<result column="activity_status" property="activityStatus" />
+		<result column="start_week_day" property="startWeekDay" />
+		<result column="end_week_day" property="endWeekDay" />
+		
+		<result column="start_hour" property="startHour" />
+		<result column="end_hour" property="endHour" />
+		<result column="quota" property="quota" />
+		<result column="cash_subsidy" property="cashSubsidy" />
+		<result column="sale_person_num" property="salePersonNum" />
+		<result column="persion_participate_cnt" property="persionParticipateCnt" />
+		<result column="pin_action_invalidate" property="pinActionInvalidate" />
+		<result column="pin_createtable_invalidate" property="pinCreatetableInvalidate" />
+		<result column="visit_pv_cnt" property="visitPvCnt" />	
+		<result column="rule_desc" property="ruleDesc" />	
+</resultMap>
+
+<!-- 查询累计的参与人数 -->
+<select id="getQiangDanTotalCount" resultType="java.lang.Integer" >
+select visit_pv_cnt from pin_activity where activity_name='抢桌活动'
+</select>
+
+<!-- 返回活动列表 -->
+<select id="getQiangDanDetails" resultMap="PinActivity" parameterType="java.math.BigInteger">
+select 
+activity_id,
+activity_name,
+activity_status, 
+start_week_day,
+end_week_day,
+start_hour,
+end_hour,
+quota,
+cash_subsidy,
+sale_person_num ,
+persion_participate_cnt,
+pin_action_invalidate,
+pin_createtable_invalidate,
+visit_pv_cnt ,
+rule_desc
+from pin_activity where activity_id=#{activity_id}
+</select>
+
+<!-- 返回活动列表 -->
+<update id="addVisitPvCnt" parameterType="com.aspire.wifi.wap.entity.PinActivityEntity">
+update pin_activity set visit_pv_cnt=#{visitPvCnt} where activity_id=#{activityId}
+</update>
+
+
+<select id="activityObject" resultMap="PinActivity" >
+select pa.* from pin_activity pa where activity_name='抢桌活动' and  activity_status=1
+</select>
+<select id="getAcitivityByquyouhui" resultMap="PinActivity">
+select * from pin_activity where activity_id!=1
+</select>
+<select id="getAcitivityInfoByActivityId" resultMap="PinActivity" parameterType="java.math.BigInteger">
+select * from pin_activity where activity_id=#{activityId}
+</select>
+
+<update id="updatePinActivity" parameterType="int">
+   update pin_activity
+      set quota=quota-1
+      ,cash_subsidy=cash_subsidy+1
+     where activity_id=#{activityId}
+    </update>
+   <select id="procUpdatePinActivity" statementType="CALLABLE" parameterType="java.util.HashMap">
+      <![CDATA[  
+    {call proc_bmw_update_pin_activity(#{id,mode=IN,jdbcType=BIGINT},#{xfm,mode=IN,jdbcType=VARCHAR},#{customcode,mode=OUT,jdbcType=VARCHAR})}
+     ]]> 
+   </select>
+</mapper>

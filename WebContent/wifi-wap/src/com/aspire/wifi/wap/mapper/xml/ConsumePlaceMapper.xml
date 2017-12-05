@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <!DOCTYPE mapper 
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aspire.wifi.wap.mapper.ConsumePlaceMapper">
+	<resultMap type="com.aspire.wifi.wap.entity.ConsumePlaceEntity"
+		id="ConsumePlace">
+		<result column="consume_place_id" property="consumePlaceId" />
+		<result column="consume_place_name" property="consumePlaceName" />
+		<result column="consume_place_addr" property="consumePlaceAddr" />
+		<result column="consume_place_desc" property="consumePlaceDesc" />
+		<result column="act_type_id" property="actTypeId" />
+		<result column="publish_date" property="publishDate" />
+		<result column="publish_user" property="publishUser" />
+		<result column="business_code" property="businessCode" />
+		<result column="order_phone" property="dinnerPhone" />
+	</resultMap>
+
+	<!-- 展示消费地点 -->
+	<select id="getCounsumePlace" resultMap="ConsumePlace" parameterType="java.util.HashMap">
+		<![CDATA[
+		select cp.* from consume_place cp where 1=1
+		]]>
+		<if test="consumePlaceId != null">
+		   and cp.consume_place_id = #{consumePlaceId}
+		</if>
+		<if test="businessCode != null">
+		   and cp.business_code = #{businessCode}
+		</if>
+	</select>
+
+</mapper>

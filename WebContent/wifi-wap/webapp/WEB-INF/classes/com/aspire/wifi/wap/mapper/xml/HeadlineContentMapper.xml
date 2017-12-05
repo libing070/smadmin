@@ -1,0 +1,367 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+    <!DOCTYPE mapper 
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.aspire.wifi.wap.mapper.HeadlineContentMapper">
+	<resultMap type="com.aspire.wifi.wap.entity.HeadlineContentEntity" id="headlineContent">
+		<result column="headline_id" property="headlineId" />
+		<result column="mobile" property="mobile" />
+		<result column="nickname" property="nickname" />
+		<result column="content_type_id" property="contentTypeId" />
+		<result column="title" property="title" />
+		<result column="content" property="content" />
+		<result column="oper_date" property="operDate" />
+		<result column="create_date" property="createDate" />
+        <result column="oper_date_string" property="operDateString" />
+		<result column="audit_user" property="auditUser" />
+		<result column="audit_time" property="auditTime" />
+		<result column="audit_comment" property="auditComment" />
+		<result column="status" property="status" />
+		<result column="top_number" property="topNumber" />
+		<result column="reply_num" property="replyNum" />
+		<result column="praise_num" property="praiseNum" />
+		<result column="click_num" property="clickNum" />
+        <result column="if_support_comment" property="ifSupportComment" />
+	</resultMap>
+	<resultMap type="com.aspire.wifi.wap.entity.Parameter" id="parameter">
+		<result column="begin" property="begin" />
+		<result column="end" property="end" />
+		
+	</resultMap>
+	<!-- 查询四条公告公用sql -->
+	<sql id="queryGongGaoDomain">
+		select hc.headline_id,hc.mobile,ui.nickname,hc.content_type_id,hc.title,hc.content,hc.create_date,DATE_FORMAT(
+	            hc.create_date,
+	            '%Y-%m-%d %H:%i:%S'
+	        ) AS oper_date_string,
+		hc.audit_user,
+		hc.audit_time,hc.audit_comment,hc.status,hc.top_number,hc.reply_num,hc.praise_num
+		from headline_content hc, SHIROUSER_MANAGE ui
+		where hc.mobile = ui.account and content_type_id=6 and hc.status=2 	
+	</sql>
+	<!-- 查询首页6条头条公用sql -->
+	<sql id="queryheadlineIndexDomain">
+		SELECT 
+	               hc.headline_id,
+	               hc.mobile,
+	               ui.nickname,
+	               hc.content_type_id,
+	               hc.title,
+	               hc.content,
+	               hc.create_date,
+	               DATE_FORMAT(hc.create_date, '%Y-%m-%d %H:%i:%S') AS oper_date_string,
+	               hc.audit_user,
+	               hc.audit_time,
+	               hc.audit_comment,
+	               hc.status,
+	               hc.top_number,
+	               hc.reply_num,
+	               hc.praise_num,
+	               hc.if_support_comment
+	          FROM headline_content hc,
+	        (SELECT DISTINCT mobile,nickname FROM (SELECT s.account mobile,s.nickname,1 is_manger from SHIROUSER_MANAGE s UNION All select u.mobile,u.nickname,0 is_manger from user_info u) m GROUP BY mobile )  ui
+	         WHERE hc.mobile = ui.mobile
+	           and hc.content_type_id !=6
+	           and hc.status in (0, 2) 
+	</sql>
+	<!-- 查询关于我的用户头条总数 -->
+	<select id="queryMyHeadCount" parameterType="String" resultType="integer">
+		select count(1) from headline_content hc
+						where	hc.mobile=#{mobile} and hc.status=2
+	</select>
+	<!-- 查询关于我的用户 的评论总数量（评论我的头条的评论总数量）和我的赞的总数量-->
+	<select id="queryReplyAndPraiseCount" parameterType="String" resultMap="parameter">
+		select sum(hc.reply_num) begin,sum(hc.praise_num) end from headline_content hc where hc.mobile=#{mobile} and hc.status=2
+	</select>
+	<!-- 查询所有关于我的头条的信息 -->
+	<select id="queryMyHeadInfo" parameterType="String" resultMap="headlineContent">
+		select hc.headline_id,hc.mobile,ui.nickname,hc.content_type_id,hc.title,hc.content,hc.create_date,DATE_FORMAT(
+            hc.create_date,
+            '%Y-%m-%d %H:%i:%S'
+        ) AS oper_date_string,
+		hc.audit_user,
+				hc.audit_time,hc.audit_comment,hc.status,hc.top_number,hc.reply_num,hc.praise_num
+		 from headline_content hc, user_info ui
+						where hc.mobile = ui.mobile and hc.mobile=#{mobile} and hc.status=2
+	</select>
+	
+	<!-- 查询置顶的标题 -->
+<select id="queryTopTitle" resultMap="headlineContent">
+select * from  ((
+	<include refid="queryGongGaoDomain"/>
+	and hc.top_number=21 ORDER BY hc.oper_date DESC limit 0,1
+	)
+	union all 
+	(
+	<include refid="queryGongGaoDomain"/>
+	and hc.top_number=22 ORDER BY hc.oper_date DESC limit 0,1
+	)
+	union all 
+	(
+	<include refid="queryGongGaoDomain"/>
+	and hc.top_number=23 ORDER BY hc.oper_date DESC limit 0,1
+	)
+	union all 
+	(
+	<include refid="queryGongGaoDomain"/>
+	and hc.top_number=24 ORDER BY hc.oper_date DESC limit 0,1
+	)) u
+</select>
+	
+<!-- 根据id查询正文 -->
+<select id="queryTopContentById" resultMap="headlineContent" parameterType="Integer">
+select hc.headline_id,hc.mobile,ui.nickname,hc.content_type_id,hc.title,hc.content,hc.create_date,DATE_FORMAT(
+            hc.create_date,
+            '%Y-%m-%d %H:%i:%S'
+        ) AS oper_date_string,
+hc.audit_user,
+hc.audit_time,hc.audit_comment,hc.status,hc.top_number,hc.reply_num,hc.praise_num
+from headline_content hc, user_info ui
+where hc.mobile = ui.mobile and content_type_id=6 and hc.status=2  and top_number = 1 and hc.headline_id=#{headlineId}
+</select>
+
+<select id="queryHeadlineContent" parameterType="com.aspire.wifi.wap.entity.HeadlineContentEntity" resultMap="headlineContent">
+    SELECT
+        hc.headline_id,
+        hc.mobile,
+        ui.nickname,
+        hc.content_type_id,
+        hc.title,
+        hc.content,
+        hc.create_date,
+        DATE_FORMAT(
+            hc.create_date,
+            '%Y-%m-%d %H:%i:%S'
+        ) AS oper_date_string,
+        hc.audit_user,
+        hc.audit_time,
+        hc.audit_comment,
+        hc.status,
+        hc.top_number,
+        hc.reply_num,
+        hc.praise_num,
+        hc.if_support_comment
+    FROM
+        headline_content hc, (SELECT DISTINCT mobile,nickname FROM (SELECT s.account mobile,s.nickname,1 is_manger from SHIROUSER_MANAGE s UNION All select u.mobile,u.nickname,0 is_manger from user_info u) m GROUP BY mobile ) ui
+    WHERE hc.mobile = ui.mobile
+        and hc.content_type_id = #{contentTypeId}
+        <if test="dynamicFields.headlineSch != null and dynamicFields.headlineSch != ''">
+            AND (
+                hc.nickname like CONCAT('%', #{dynamicFields.headlineSch}, '%')
+                OR
+                hc.title like CONCAT('%', #{dynamicFields.headlineSch}, '%')
+                OR
+                hc.orig_title like CONCAT('%', #{dynamicFields.headlineSch}, '%')
+                OR
+                hc.content like CONCAT('%', #{dynamicFields.headlineSch}, '%')
+                OR
+                hc.orig_content like CONCAT('%', #{dynamicFields.headlineSch}, '%')
+            )
+        </if>
+        <if test="mobile != null and mobile != ''">
+            AND hc.mobile = #{mobile}
+        </if>
+        AND hc.status in (0, 2)
+    ORDER BY hc.headline_id DESC
+    LIMIT #{mysqlStart}, #{limit}
+</select>
+
+<select id="queryIndexHeadlineContent" parameterType="com.aspire.wifi.wap.entity.HeadlineContentEntity" resultMap="headlineContent">
+	select * from  (
+	(
+	<include refid="queryheadlineIndexDomain"/>
+	and hc.top_number=1 ORDER BY hc.oper_date DESC limit 0,1
+	)
+	union all 
+	(
+	<include refid="queryheadlineIndexDomain"/>
+	and hc.top_number=2 ORDER BY hc.oper_date DESC limit 0,1
+	)
+	union all 
+	(
+	<include refid="queryheadlineIndexDomain"/>
+	and hc.top_number=3 ORDER BY hc.oper_date DESC limit 0,1
+	)
+<!--  	union all 
+	(
+	<include refid="queryheadlineIndexDomain"/>
+	and hc.top_number=4 ORDER BY hc.oper_date DESC limit 0,1
+	)
+	union all 
+	(
+	<include refid="queryheadlineIndexDomain"/>
+	and hc.top_number=5 ORDER BY hc.oper_date DESC limit 0,1
+	)
+	union all 
+	(
+	<include refid="queryheadlineIndexDomain"/>
+	and hc.top_number=6 ORDER BY hc.oper_date DESC limit 0,1
+	)
+	-->
+	) u
+	
+</select>
+
+    <select id="queryHeadlineContentCount" parameterType="com.aspire.wifi.wap.entity.HeadlineContentEntity" resultType="integer">
+        SELECT count(h.headline_id)
+        FROM (
+            SELECT
+            hc.headline_id,
+            hc.mobile,
+            ui.nickname,
+            hc.content_type_id,
+            hc.title,
+            hc.content,
+            hc.create_date,
+            DATE_FORMAT(
+            hc.create_date,
+            '%Y-%m-%d %H:%i:%S'
+            ) AS oper_date_string,
+            hc.audit_user,
+            hc.audit_time,
+            hc.audit_comment,
+            hc.status,
+            hc.top_number,
+            hc.reply_num,
+            hc.praise_num,
+            hc.if_support_comment
+            FROM
+            headline_content hc, (SELECT DISTINCT mobile,nickname FROM (SELECT s.account mobile,s.nickname,1 is_manger from SHIROUSER_MANAGE s UNION All select u.mobile,u.nickname,0 is_manger from user_info u) m GROUP BY mobile ) ui
+            WHERE hc.mobile = ui.mobile
+            AND hc.content_type_id = #{contentTypeId}
+            <if test="dynamicFields.headlineSch != null and dynamicFields.headlineSch != ''">
+                AND (
+                    hc.nickname like CONCAT('%', #{dynamicFields.headlineSch}, '%')
+                    OR
+                    hc.title like CONCAT('%', #{dynamicFields.headlineSch}, '%')
+                    OR
+                    hc.orig_title like CONCAT('%', #{dynamicFields.headlineSch}, '%')
+                    OR
+                    hc.content like CONCAT('%', #{dynamicFields.headlineSch}, '%')
+                    OR
+                    hc.orig_content like CONCAT('%', #{dynamicFields.headlineSch}, '%')
+                )
+            </if>
+            <if test="mobile != null and mobile != ''">
+                AND hc.mobile = #{mobile}
+            </if>
+            AND hc.status in (0, 2)
+        ) h
+    </select>
+
+    <select id="findHeadlineContent" parameterType="string" resultMap="headlineContent">
+        SELECT
+        hc.headline_id,
+        hc.mobile,
+        ui.nickname,
+        hc.content_type_id,
+        hc.title,
+        hc.content,
+        hc.create_date,
+        DATE_FORMAT(
+        hc.create_date,
+        '%Y-%m-%d %H:%i:%S'
+        ) AS oper_date_string,
+        hc.audit_user,
+        hc.audit_time,
+        hc.audit_comment,
+        hc.status,
+        hc.top_number,
+        hc.reply_num,
+        hc.praise_num,
+        hc.click_num,
+        hc.if_support_comment
+        FROM
+        headline_content hc, (SELECT DISTINCT mobile,nickname FROM (SELECT s.account mobile,s.nickname,1 is_manger from SHIROUSER_MANAGE s UNION All select u.mobile,u.nickname,0 is_manger from user_info u) m GROUP BY mobile ) ui
+        WHERE hc.mobile = ui.mobile
+        and hc.headline_id = #{headlineId}
+    </select>
+
+    <insert id="insertHeadlineContent" parameterType="com.aspire.wifi.wap.entity.HeadlineContentEntity" useGeneratedKeys="true" keyProperty="headlineId">
+        INSERT INTO headline_content (
+            mobile,
+            nickname,
+            content_type_id,
+            title,
+            orig_title,
+            content,
+            orig_content,
+            create_date,
+            STATUS,
+            top_number,
+            reply_num,
+            praise_num,
+            if_support_comment
+        ) VALUES (
+            #{mobile},
+            #{nickname},
+            #{contentTypeId},
+            #{title},
+            #{origTitle},
+            #{content},
+            #{origContent},
+            NOW(),
+            0,
+            0,
+            0,
+            0,
+            #{ifSupportComment}
+        )
+    </insert>
+
+    <update id="updateHeadlineContent" parameterType="com.aspire.wifi.wap.entity.HeadlineContentEntity">
+        UPDATE headline_content
+        SET
+            headline_id = #{headlineId}
+        <if test="mobile != null and mobile != ''">
+            , mobile = #{mobile}
+        </if>
+        <if test="nickname != null and nickname != ''">
+            , nickname = #{nickname}
+        </if>
+        <if test="contentTypeId != null and contentTypeId != ''">
+            , content_type_id = #{contentTypeId}
+        </if>
+        <if test="title != null and title != ''">
+            , title = #{title}
+        </if>
+        <if test="origTitle != null and origTitle != ''">
+            , orig_title = #{origTitle}
+        </if>
+        <if test="content != null and content != ''">
+            , content = #{content}
+        </if>
+        <if test="origContent != null and origContent != ''">
+            , orig_content = #{origContent}
+        </if>
+        <if test="status != null and status != ''">
+            , status = #{status}
+        </if>
+        <if test="clickNum != null and clickNum != ''">
+            , click_num = #{clickNum}
+        </if>
+           , oper_date = NOW()
+            
+        WHERE headline_id = #{headlineId}
+    </update>
+    
+    <select id="searchHeadlineList" parameterType="com.aspire.wifi.wap.entity.HeadlineContentEntity" resultMap="headlineContent">
+		select 
+		   t.headline_id,
+		   ui.nickname,
+		   t.content_type_id,
+		   t.title,
+		   t.content,
+		   DATE_FORMAT(
+            t.create_date,
+            '%Y-%m-%d %H:%i:%S'
+            ) AS oper_date_string,
+		   t.status,
+		   t.reply_num,
+		   t.praise_num 
+		from headline_content t, user_info ui 
+		where t.mobile = ui.mobile and t.content_type_id = #{contentTypeId} and t.status in (0, 2)
+		order by t.headline_id desc limit 0,1
+    </select>
+</mapper>

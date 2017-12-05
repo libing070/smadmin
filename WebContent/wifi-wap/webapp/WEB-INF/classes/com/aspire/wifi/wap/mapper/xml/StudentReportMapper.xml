@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+    <!DOCTYPE mapper 
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aspire.wifi.wap.mapper.StudentReportMapper">
+	<resultMap type="com.aspire.wifi.wap.entity.StudentReport" id="studentReport">
+		<result column="msisdn" property="msisdn" />
+		<result column="report_pic" property="reportPic" javaType="byte[]" jdbcType="BLOB" typeHandler="org.apache.ibatis.type.BlobTypeHandler" />
+		<result column="create_time" property="createTime" />	
+		<result column="result" property="result" />
+		<result column="result_desc" property="resultDesc" />
+	</resultMap>
+
+    <resultMap type="java.util.HashMap" id="myActiveEntitySR">
+        <id column="id" property="activeId" />
+        <result column="result" property="activeStatus" />
+        <result column="create_time" property="activeDate" />
+        <result column="create_time_string" property="activeDateString" />
+        <result column="msisdn" property="ownerMobile" />
+        <result column="active_type" property="activeType" />
+    </resultMap>
+
+	<!-- 新增新生信息 -->
+	<insert id="insertNewStudent" parameterType="com.aspire.wifi.wap.entity.StudentReport">
+		insert into student_report (
+									msisdn,						
+									report_pic,
+									result,
+									create_user,
+									create_time
+								) 
+								values
+								(  
+									#{msisdn},						
+									#{reportPic},
+									#{result},	
+									#{createUser},	
+									#{createTime}	
+								)						
+	</insert>
+	
+	<!-- 查询新生信息 -->
+	<select id="getStudentReport" parameterType="String" resultMap="studentReport">
+		select u.id,u.msisdn,u.result,u.report_pic,u.result_desc from student_report u
+						where u.msisdn=#{msisdn}
+	</select>
+	
+	<!-- 修改新生信息并保存 -->
+	<update id="updateStudentReport" parameterType="com.aspire.wifi.wap.entity.StudentReport">
+		update student_report u set
+								u.report_pic=#{reportPic},
+								u.create_user=#{createUser},
+								u.result=#{result}
+								where u.msisdn=#{msisdn}						
+	</update>
+	
+	<!-- 修改图片审核状态 -->
+	<update id="updateReportPicStatus" parameterType="com.aspire.wifi.wap.entity.StudentReport">
+		update student_report u set
+								u.result=#{result}
+								where u.msisdn=#{msisdn}						
+	</update>
+	<!-- 修改是否阅读为足迹状态 -->
+	<update id="updateReportFootStatus" parameterType="String">
+		update student_report u set
+								u.is_footmark=1
+								where u.id=#{id}						
+	</update>
+
+    <select id="queryStudentReportForMyActive" parameterType="com.aspire.wifi.wap.entity.StudentReport" resultMap="myActiveEntitySR">
+        SELECT
+            s.id,
+            s.result,
+            s.create_time,
+            s.msisdn,
+            DATE_FORMAT(s.create_time, '%Y-%m-%d %H:%i:%S') AS create_time_string,
+            '2' AS active_type
+        FROM student_report s
+        WHERE s.msisdn = #{msisdn}
+        <if test="isFootmark != null and isFootmark != ''">
+            AND s.is_footmark = #{isFootmark}
+        </if>
+    </select>
+</mapper>

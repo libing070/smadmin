@@ -1,0 +1,19 @@
+#Tue Nov 04 14:34:25 CST 2014
+eclipse.preferences.version=1
+encoding//conf/dataSource/mysql_jdbc.properties=UTF-8
+encoding//conf/system.properties=UTF-8
+encoding//dbscript/WIFI_DSP1.0.0.001_WAP/WIFI_DSP1.0.0.001_createObject.sql=UTF-8
+encoding//src/com/aspire/wifi/wap/controller/LoginController.java=UTF-8
+encoding//webapp/views/huodong.jsp=UTF-8
+encoding//webapp/views/index.jsp=UTF-8
+encoding//webapp/views/qiangzhuo/qiangzhuo_creat.jsp=UTF-8
+encoding//webapp/views/qiangzhuo/qiangzhuo_creat_sucess.jsp=UTF-8
+encoding//webapp/views/qiangzhuo/qiangzhuo_detail.jsp=UTF-8
+encoding//webapp/views/qiangzhuo/qiangzhuo_fail.jsp=UTF-8
+encoding//webapp/views/qiangzhuo/qiangzhuo_join_sucess.jsp=UTF-8
+encoding//webapp/views/qiangzhuo/qiangzhuo_list.jsp=UTF-8
+encoding//webapp/views/shiyong/shiyong.jsp=UTF-8
+encoding//webapp/views/toutiao/toutiao.jsp=UTF-8
+encoding//webapp/views/toutiao/toutiao_detail.jsp=UTF-8
+encoding//webapp/views/toutiao/toutiao_edit.jsp=UTF-8
+encoding/<project>=UTF-8

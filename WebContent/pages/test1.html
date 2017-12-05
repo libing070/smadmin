@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>eacharts-test1-散点图</title>
+    <script src="js/echarts.js"></script>
+    <script src="js/test1.js"></script>
+    <script src="js/jquery-1.10.2.min.js"></script>
+    <link rel="stylesheet" href="css/test1.css">
+</head>
+
+<body>
+    <div id="scatterWrap" class="scatter_wrap">
+        <div id="scatterCtn" class="scatter_ctn"></div>
+    </div>
+    <div id="ganttWrap" class="gantt_wrap">
+        <div class="row">
+            <div class="col-xs-2">
+                终端套利
+            </div>
+            <div class="col-xs-10">
+                <ul class="list-inline blue">
+                    <li class="col-xs-1"></li>
+                    <li class="col-xs-1 off"></li>
+                    <li class="col-xs-1"></li>
+                    <li class="col-xs-1"></li>
+                    <li class="col-xs-1"></li>
+                    <li class="col-xs-1"></li>
+                    <li class="col-xs-1"></li>
+                    <li class="col-xs-1"></li>
+                    <li class="col-xs-1"></li>
+                    <li class="col-xs-1"></li>
+                    <li class="col-xs-1"></li>
+                    <li class="col-xs-1"></li>
+                </ul>
+                <ul class="list-inline red">
+                    <li class="col-xs-1"></li>
+                    <li class="col-xs-1"></li>
+                    <li class="col-xs-1"></li>
+                    <li class="col-xs-1"></li>
+                    <li class="col-xs-1"></li>
+                    <li class="col-xs-1"></li>
+                    <li class="col-xs-1"></li>
+                    <li class="col-xs-1"></li>
+                    <li class="col-xs-1"></li>
+                    <li class="col-xs-1"></li>
+                    <li class="col-xs-1"></li>
+                    <li class="col-xs-1"></li>
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-2">
+                有价卡
+            </div>
+            <div class="col-xs-10">
+                <ul class="list-inline blue">
+                    <li class="col-xs-1" title="1月"></li>
+                    <li class="col-xs-1 off" title="2"></li>
+                    <li class="col-xs-1" title="3"></li>
+                    <li class="col-xs-1"></li>
+                    <li class="col-xs-1"></li>
+                    <li class="col-xs-1"></li>
+                    <li class="col-xs-1"></li>
+                    <li class="col-xs-1"></li>
+                    <li class="col-xs-1"></li>
+                    <li class="col-xs-1"></li>
+                    <li class="col-xs-1"></li>
+                    <li class="col-xs-1"></li>
+                </ul>
+                <ul class="list-inline red">
+                    <li class="col-xs-1"></li>
+                    <li class="col-xs-1"></li>
+                    <li class="col-xs-1"></li>
+                    <li class="col-xs-1"></li>
+                    <li class="col-xs-1"></li>
+                    <li class="col-xs-1 off"></li>
+                    <li class="col-xs-1"></li>
+                    <li class="col-xs-1 off"></li>
+                    <li class="col-xs-1"></li>
+                    <li class="col-xs-1 off"></li>
+                    <li class="col-xs-1"></li>
+                    <li class="col-xs-1"></li>
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-2">
+                客户欠费
+            </div>
+            <div class="col-xs-10">
+                <ul class="list-inline blue">
+                    <li class="col-xs-1"></li>
+                    <li class="col-xs-1 off"></li>
+                    <li class="col-xs-1"></li>
+                    <li class="col-xs-1"></li>
+                    <li class="col-xs-1"></li>
+                    <li class="col-xs-1 off"></li>
+                    <li class="col-xs-1 off"></li>
+                    <li class="col-xs-1"></li>
+                    <li class="col-xs-1"></li>
+                    <li class="col-xs-1"></li>
+                    <li class="col-xs-1"></li>
+                    <li class="col-xs-1"></li>
+                </ul>
+                <ul class="list-inline red">
+                    <li class="col-xs-1"></li>
+                    <li class="col-xs-1"></li>
+                    <li class="col-xs-1"></li>
+                    <li class="col-xs-1 off"></li>
+                    <li class="col-xs-1 off"></li>
+                    <li class="col-xs-1 off"></li>
+                    <li class="col-xs-1"></li>
+                    <li class="col-xs-1"></li>
+                    <li class="col-xs-1"></li>
+                    <li class="col-xs-1"></li>
+                    <li class="col-xs-1"></li>
+                    <li class="col-xs-1"></li>
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-2">
+                养卡套利
+            </div>
+            <div class="col-xs-10">
+                <ul class="list-inline blue">
+                    <li class="col-xs-1"></li>
+                    <li class="col-xs-1 off"></li>
+                    <li class="col-xs-1"></li>
+                    <li class="col-xs-1"></li>
+                    <li class="col-xs-1"></li>
+                    <li class="col-xs-1 off"></li>
+                    <li class="col-xs-1"></li>
+                    <li class="col-xs-1"></li>
+                    <li class="col-xs-1"></li>
+                    <li class="col-xs-1"></li>
+                    <li class="col-xs-1"></li>
+                    <li class="col-xs-1"></li>
+                </ul>
+                <ul class="list-inline red">
+                    <li class="col-xs-1"></li>
+                    <li class="col-xs-1"></li>
+                    <li class="col-xs-1"></li>
+                    <li class="col-xs-1"></li>
+                    <li class="col-xs-1"></li>
+                    <li class="col-xs-1 off"></li>
+                    <li class="col-xs-1"></li>
+                    <li class="col-xs-1 off"></li>
+                    <li class="col-xs-1"></li>
+                    <li class="col-xs-1 off"></li>
+                    <li class="col-xs-1"></li>
+                    <li class="col-xs-1"></li>
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-offset-2 col-xs-10">
+                <ul class="list-inline">
+                    <li class="col-xs-1">1月</li>
+                    <li class="col-xs-1">2月</li>
+                    <li class="col-xs-1">3月</li>
+                    <li class="col-xs-1">4月</li>
+                    <li class="col-xs-1">5月</li>
+                    <li class="col-xs-1">6月</li>
+                    <li class="col-xs-1">7月</li>
+                    <li class="col-xs-1">8月</li>
+                    <li class="col-xs-1">9月</li>
+                    <li class="col-xs-1">10月</li>
+                    <li class="col-xs-1">11月</li>
+                    <li class="col-xs-1">12月</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

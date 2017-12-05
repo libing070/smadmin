@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/WXCS_96159/!svn/ver/14/trunk/wifi-wap/src/com/aspire/wifi/common/sms/entity
+END
+SmsSendMsg.java
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/WXCS_96159/!svn/ver/14/trunk/wifi-wap/src/com/aspire/wifi/common/sms/entity/SmsSendMsg.java
+END
+SmsReceiveMsg.java
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/WXCS_96159/!svn/ver/14/trunk/wifi-wap/src/com/aspire/wifi/common/sms/entity/SmsReceiveMsg.java
+END

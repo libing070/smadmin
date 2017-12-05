@@ -1,0 +1,205 @@
+/*老版本css start*/
+#head {
+	background-color: #29bffe;
+	height: 40px;
+}
+.index-ad{
+	margin-top:20px;
+	overflow:hidden;
+	margin:auto
+}
+.indexad-pic{
+	background-color:#FFF;
+	float:left;
+	width:95%;
+	padding:5px;
+}
+.indexad-shadow{
+	float:left;
+	margin-top:10px;
+}
+.indexad-shadow2{
+	margin-top:10px;
+	text-align:right;
+	padding-right:5%;
+}
+.indexad-shadow3{
+	text-align:right;
+	padding-right:5%;
+}
+
+.index-gonggao{
+	background-color:#fcec95;
+	overflow:hidden;
+	margin-top:10px;
+}
+.index-gonggao-title{
+	padding:5px;
+	text-align:center;
+	color:#666666;
+	background-color:#c9c9c9;
+	float:left;
+	overflow:hidden;
+	width:10%;
+	font-size:0.8em;
+}
+.index-gonggao-text{
+	padding:5px;
+	float:left;
+	width:95%;
+	font-size:0.8em;
+}
+.index-gonggao-text span{
+	margin-right:10px;
+}
+
+
+.index-menubg{
+	background-color:#FFF;
+	border:#e6e6e6 solid 1px;
+	margin-top:10px;
+	overflow:hidden;
+}
+.index-menu-block{
+	float:left;
+	width:20%;
+	overflow:hidden;
+	font-size:0.8em;
+}
+.index-menu-button{
+	text-align:center;
+	margin:5px 3px;
+	border-radius:15px 15px 0 15px;
+}
+.index-menu-text{
+	padding:5px 0;
+}
+.btn-lightblue{
+	background-color:#53b3ea;
+	color:#FFF;
+}
+.btn-pink{
+	background-color:#f07b99;
+	color:#FFF;
+}
+.btn-darkblue{
+	background-color:#008cb0;
+	color:#FFF;
+}
+.btn-green{
+	background-color:#1bd096;
+	color:#FFF;
+}
+.btn-orange{
+	background-color:#faad33;
+	color:#FFF;
+}
+.btn-cancel{
+	background-color:#25bebc;
+	color:#FFF;
+}
+.btn-confirm{
+	background-color:#b13f27;
+	color:#FFF;
+}
+
+
+.title-bg{
+	background-color: #FFF;
+	background-image: url(../images/bg_title.png);
+	background-repeat: repeat-x;
+	background-position: bottom;
+	overflow:hidden;
+	border-bottom:#c7dfde solid 1px;
+	border-top:#c7dfde solid 1px;
+	margin-top:10px;
+}
+.title-text{
+	text-indent:2em;
+	float:left;
+}
+.title-more{
+	margin-right:0.5em;
+	float:right;
+	font-size:0.7em;
+}
+
+.title-pink{
+	background-image: url(../images/arrow_title01.png);
+	background-repeat: no-repeat;
+	background-position: -5px center;
+	float:left;
+	height:40px;
+	line-height:40px;
+	width:100%;
+}
+.title-dblue{
+	background-image: url(../images/arrow_title02.png);
+	background-repeat: no-repeat;
+	background-position: -5px center;
+	float:left;
+	height:40px;
+	line-height:40px;
+	width:100%;
+}
+.title-lblue{
+	background-image: url(../images/arrow_title03.png);
+	background-repeat: no-repeat;
+	background-position: -5px center;
+	float:left;
+	height:40px;
+	line-height:40px;
+	width:100%;
+}
+.title-green{
+	background-image: url(../images/arrow_title04.png);
+	background-repeat: no-repeat;
+	background-position: -5px center;
+	float:left;
+	height:40px;
+	line-height:40px;
+	width:100%;
+}
+
+.pagetitle{text-align:center; font-size:1.2em; color:#FFF; line-height:40px;}
+.back{height:35px; padding:5px 10px 0; text-align:center; float:left; background-color:#18aae6; border-right:#64d4fc 1px solid;}
+.logout{height:40px; padding:0 10px; text-align:center; float:right; font-size:0.7em; border-left:#64d4fc 1px solid;}
+.pagetitle a{text-decoration:none; color:#FFF;}
+
+.content{
+	background-color:#fff;
+	border:#e4e4e4 solid 1px;
+	margin:5px;
+	padding:5px;
+	color:#333;
+	font-size:0.8em;
+	line-height:1.5em;
+	overflow:hidden;
+}
+.content-btn{padding:5px; margin:5px; overflow:hidden;}
+.content-btn-item{padding:5px 15px; text-align:center; color:#FFF; float:left; margin:5px;}
+.input1{background-color:#f6f6f6; border:#e4e4e4 solid 1px; color:#8b8b8b; margin:5px; padding:5px; border-radius:5px;}
+
+.content2{
+	background-color:#f7f7f7;
+	border:#e4e4e4 solid 1px;
+	margin:5px;
+	padding:5px;
+	font-size:0.8em;
+	color:#757575;
+}
+
+.school-menubg{
+	background-color:transparent;
+	margin-top:10px;
+	overflow:hidden;
+	text-align:center;
+	width:80%;
+	margin:10px auto;
+}
+.school-menu-block{
+	float:left;
+	width:33.3%;
+	overflow:hidden;
+}
+/*老版本css end*/

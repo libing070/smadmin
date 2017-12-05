@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+    <!DOCTYPE mapper 
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aspire.wifi.wap.mapper.NoticeMapper">
+	<resultMap type="com.aspire.wifi.wap.entity.Notice" id="notice">
+		<result column="notice_name" property="noticeName" />
+		<result column="notice_content" property="noticeContent" />
+	</resultMap>
+
+
+	<!-- <select id="queryNotice" resultMap="notice">
+		select t.notice_name,t.notice_content from notice t 
+				where now() between t.begin_time and t.end_time
+	</select> -->
+</mapper> 

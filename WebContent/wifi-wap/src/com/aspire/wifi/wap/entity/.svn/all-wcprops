@@ -1,0 +1,179 @@
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/WXCS_96159/!svn/ver/136/trunk/wifi-wap/src/com/aspire/wifi/wap/entity
+END
+PinActivityEntity.java
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/WXCS_96159/!svn/ver/14/trunk/wifi-wap/src/com/aspire/wifi/wap/entity/PinActivityEntity.java
+END
+HeadlineContentEntity.java
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/WXCS_96159/!svn/ver/14/trunk/wifi-wap/src/com/aspire/wifi/wap/entity/HeadlineContentEntity.java
+END
+PinCreateTableHistoryEntity.java
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/WXCS_96159/!svn/ver/14/trunk/wifi-wap/src/com/aspire/wifi/wap/entity/PinCreateTableHistoryEntity.java
+END
+SysConfigEntity.java
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/WXCS_96159/!svn/ver/14/trunk/wifi-wap/src/com/aspire/wifi/wap/entity/SysConfigEntity.java
+END
+PinCreateTableDetailEntity.java
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/WXCS_96159/!svn/ver/14/trunk/wifi-wap/src/com/aspire/wifi/wap/entity/PinCreateTableDetailEntity.java
+END
+MobileReplyReviewEntity.java
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/WXCS_96159/!svn/ver/14/trunk/wifi-wap/src/com/aspire/wifi/wap/entity/MobileReplyReviewEntity.java
+END
+BaseDomain.java
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/WXCS_96159/!svn/ver/14/trunk/wifi-wap/src/com/aspire/wifi/wap/entity/BaseDomain.java
+END
+PinActionHistoryEntity.java
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/WXCS_96159/!svn/ver/14/trunk/wifi-wap/src/com/aspire/wifi/wap/entity/PinActionHistoryEntity.java
+END
+ShiroRole.java
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/WXCS_96159/!svn/ver/14/trunk/wifi-wap/src/com/aspire/wifi/wap/entity/ShiroRole.java
+END
+HeadlineReplyAttachEntity.java
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/WXCS_96159/!svn/ver/14/trunk/wifi-wap/src/com/aspire/wifi/wap/entity/HeadlineReplyAttachEntity.java
+END
+AppDownload.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/WXCS_96159/!svn/ver/14/trunk/wifi-wap/src/com/aspire/wifi/wap/entity/AppDownload.java
+END
+AppClickDetail.java
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/WXCS_96159/!svn/ver/14/trunk/wifi-wap/src/com/aspire/wifi/wap/entity/AppClickDetail.java
+END
+ConsumePlaceEntity.java
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/WXCS_96159/!svn/ver/14/trunk/wifi-wap/src/com/aspire/wifi/wap/entity/ConsumePlaceEntity.java
+END
+ShiYongEntity.java
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/WXCS_96159/!svn/ver/14/trunk/wifi-wap/src/com/aspire/wifi/wap/entity/ShiYongEntity.java
+END
+PinCreateTableEntity.java
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/WXCS_96159/!svn/ver/14/trunk/wifi-wap/src/com/aspire/wifi/wap/entity/PinCreateTableEntity.java
+END
+Parameter.java
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/WXCS_96159/!svn/ver/14/trunk/wifi-wap/src/com/aspire/wifi/wap/entity/Parameter.java
+END
+PinActionEntity.java
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/WXCS_96159/!svn/ver/14/trunk/wifi-wap/src/com/aspire/wifi/wap/entity/PinActionEntity.java
+END
+Notice.java
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/WXCS_96159/!svn/ver/14/trunk/wifi-wap/src/com/aspire/wifi/wap/entity/Notice.java
+END
+HeadlineReplyEntity.java
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/WXCS_96159/!svn/ver/14/trunk/wifi-wap/src/com/aspire/wifi/wap/entity/HeadlineReplyEntity.java
+END
+StudentReport.java
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/WXCS_96159/!svn/ver/14/trunk/wifi-wap/src/com/aspire/wifi/wap/entity/StudentReport.java
+END
+VideoInfo.java
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/WXCS_96159/!svn/ver/14/trunk/wifi-wap/src/com/aspire/wifi/wap/entity/VideoInfo.java
+END
+ShiroUser.java
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/WXCS_96159/!svn/ver/14/trunk/wifi-wap/src/com/aspire/wifi/wap/entity/ShiroUser.java
+END
+PinCreateTableDetailHistoryEntity.java
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/WXCS_96159/!svn/ver/14/trunk/wifi-wap/src/com/aspire/wifi/wap/entity/PinCreateTableDetailHistoryEntity.java
+END
+HeadlineContentAttachEntity.java
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/WXCS_96159/!svn/ver/14/trunk/wifi-wap/src/com/aspire/wifi/wap/entity/HeadlineContentAttachEntity.java
+END
+PrizeEntity.java
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/WXCS_96159/!svn/ver/136/trunk/wifi-wap/src/com/aspire/wifi/wap/entity/PrizeEntity.java
+END
+UserInfoEntity.java
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/WXCS_96159/!svn/ver/14/trunk/wifi-wap/src/com/aspire/wifi/wap/entity/UserInfoEntity.java
+END
+ZhuanFaEntity.java
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/WXCS_96159/!svn/ver/14/trunk/wifi-wap/src/com/aspire/wifi/wap/entity/ZhuanFaEntity.java
+END
+VideoPlay.java
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/WXCS_96159/!svn/ver/36/trunk/wifi-wap/src/com/aspire/wifi/wap/entity/VideoPlay.java
+END
+ShiroPermission.java
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/WXCS_96159/!svn/ver/14/trunk/wifi-wap/src/com/aspire/wifi/wap/entity/ShiroPermission.java
+END

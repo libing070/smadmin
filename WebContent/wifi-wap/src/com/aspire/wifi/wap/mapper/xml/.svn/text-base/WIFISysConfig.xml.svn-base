@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aspire.wifi.wap.mapper.WifiSysConfigMapper">
+	<resultMap type="com.aspire.wifi.wap.entity.SysConfigEntity" id="wifiSysConfigMap">
+		<result column="config_para_code" property="configParaCode" />
+		<result column="config_para_value" property="configParaValue" />
+		<result column="config_para_units" property="configParaUnits" />
+		<result column="config_para_desc" property="configParaDesc" />
+		<result column="config_para_ifactive" property="configParaIfactive" />
+	</resultMap>
+
+	<select id="querySysConfiguation" resultMap="wifiSysConfigMap">
+		select * from wifi_sysconfig where config_para_ifactive = 1
+	</select>
+	
+	<select id="searchSensitivityCount" parameterType="string" resultType="integer">
+		select count(1) from wifi_sensitive_word w where w.sensitive_word like '%' #{SensitivityName} '%'
+	</select>
+	
+	<select id="getSysConfigEntity" parameterType="string" resultMap="wifiSysConfigMap">
+		select * from wifi_sysconfig where config_para_ifactive = 1 and config_para_code = #{configParaCode}
+	</select>
+
+    <select id="listSensitiveWord" parameterType="string" resultType="string">
+        SELECT
+            sensitive_word
+        FROM
+            wifi_sensitive_word
+        WHERE
+            #{content} LIKE concat('%', sensitive_word, '%')
+    </select>
+</mapper> 

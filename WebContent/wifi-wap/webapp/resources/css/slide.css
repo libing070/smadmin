@@ -1,0 +1,15 @@
+@charset "utf-8";
+
+
+/*public scroll*/
+.scroll{margin:0px;}
+.scroll_box{overflow:hidden;visibility:hidden;position:relative;}
+.scroll_wrap{overflow:hidden; position:relative;}
+.scroll_wrap .scroll_block{position:relative;display:block;width:100%;float:left;}
+.scroll_wrap scroll_block a{display:block;margin:0 auto;position:relative;}
+.scroll_position{margin:0 auto; text-align:center;}
+.scroll_position .scroll_but{display:inline-block;width:33.1%;height:8px; background:#c7c7c7; float:left; margin-left:0.2%;}
+.scroll_position .scroll_but a{font-size:0;}
+.scroll_position .scroll_but.on{background-color:#ff9600;}
+.scroll_position_bg{background:transparent; z-index:380;height:26px;border-radius:26px;}
+
