@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+    <!DOCTYPE mapper 
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aspire.shakewxpp.wap.mapper.DistributeFlowRedMapper">
+	<resultMap id="distributeFlowRedEnvelope"
+		type="com.aspire.shakewxpp.wap.entity.DistributeFlowRedEnvelope">
+		<result column="openid" property="openid" />
+		<result column="bind_msisdn" property="bindMsisdn" />
+		<result column="fre_id" property="freId" />
+		<result column="fre_flow_currency" property="freFlowCurrency" />
+		<result column="sub_fre_id" property="subFreId" />
+		<result column="sub_fre_flow_currency" property="subFreFlowCurrency" />
+		<result column="grab_time" property="grabTime" />
+		<result column="expired_time" property="expiredTime" />
+		<result column="activity_id" property="activityId" />
+		<result column="fre_from_source" property="freFromSource" />
+		<result column="share_time" property="shareTime" />
+		<result column="bigCount" property="bigCount"/>
+	</resultMap>
+	
+	<select id="getFreId" resultType="integer">
+		select SEQ_FRE_ID.nextval from dual
+	</select>
+	
+	<!-- 插入大红包数据 -->
+	<insert id="addDistributeFlowRedEnvelope" parameterType="com.aspire.shakewxpp.wap.entity.DistributeFlowRedEnvelope">
+		insert into distribute_flow_red_envelope(
+								openid,
+								<if test="bindMsisdn != null and bindMsisdn != ''">
+									BIND_MSISDN,
+								</if>
+								fre_id,
+								sub_fre_id,
+								expired_time,
+								activity_id,
+								fre_from_source,
+								APPLY_PROVINCE_ID
+								)
+								values
+								(
+								#{openid},
+								<if test="bindMsisdn != null and bindMsisdn != ''">
+									#{bindMsisdn},
+								</if>
+								#{freId},
+								#{subFreId},
+								sysdate+#{freExpireDays},
+								#{activityId},
+								#{freFromSource},
+								#{applyProvinceId}
+							    )
+	</insert>
+	
+		<!-- 获取单个用户的大红包列表 -->
+	<select id="queryByopenid" resultMap="distributeFlowRedEnvelope" parameterType="com.aspire.shakewxpp.wap.entity.DistributeFlowRedEnvelope">
+			select *
+		      from (SELECT A.*, ROWNUM RN
+		               FROM (select t.fre_id,
+		               count(t.sub_fre_id) as bigCount,
+		               min(t.expired_time) as expired_time,
+		               min(t.grab_time) as grab_time,
+		               min(t.fre_from_source) as fre_from_source
+	 	 	from distribute_flow_red_envelope t
+		 	where openid = #{openid} and t.fre_from_source not in (5)
+		 	group by t.fre_id
+		 	order by min(t.grab_time) desc) A)
+		  	WHERE RN BETWEEN #{begin} AND #{ends}
+	</select>
+	
+	<!-- 查询当天红包的数量 -->
+	<select id="querCurrentCount" resultType="Integer" >
+	 select count(1) from distribute_flow_red_envelope where trunc(sysdate)=trunc(grab_time)
+	</select>
+	
+	<!-- 查询用户每天抢包数量 -->
+	<select id="querCurrentCountByOpenid" resultType="Integer" parameterType="String">
+	 select count(1) from distribute_flow_red_envelope where trunc(sysdate)=trunc(grab_time) and openid=#{openid}
+	</select>
+	
+	<!-- 查询每个大红包的数量-->
+	<select id="querPerBigRedCount" resultType="Integer" parameterType="com.aspire.shakewxpp.wap.entity.DistributeFlowRedEnvelope" >
+	 select count(1) from distribute_flow_red_envelope where  openid=#{openid} and fre_id=#{freId} 
+	</select> 
+	
+	
+	<select id="querPerBigRedCountByFreid" resultType="Integer" parameterType="com.aspire.shakewxpp.wap.entity.DistributeFlowRedEnvelope" >
+	    select count(1) from distribute_flow_red_envelope where   fre_id=#{freId} 
+	</select> 
+	
+	
+	
+
+	<select id="checkSendFolwDone" resultType="Integer"  parameterType="com.aspire.shakewxpp.wap.entity.DistributeFlowRedEnvelope">
+		select count(1) from DISTRIBUTE_FLOW_RED_ENVELOPE t where t.openid = #{openid}  and t.fre_from_source = #{freFromSource}
+	</select>
+	
+	
+	<select id="queryDistributeFlowByOpenidAndSource"  parameterType="com.aspire.shakewxpp.wap.entity.DistributeFlowRedEnvelope" resultType="Integer">
+	    select distinct D.FRE_ID  from DISTRIBUTE_FLOW_RED_ENVELOPE D where D.openid = #{openid}  and D.fre_from_source = #{freFromSource}
+	</select>
+	
+	<select id="queryOpenidByFreid" resultType="String" parameterType="Integer">
+		select min(t.openid) as openid from DISTRIBUTE_FLOW_RED_ENVELOPE t where t.fre_id = #{freId}
+	</select>
+	
+	<insert id="addJangliFlowRedEnvelope" parameterType="com.aspire.shakewxpp.wap.entity.DistributeFlowRedEnvelope">
+		 declare  
+	          v_count number;  
+	     begin 
+			insert into distribute_flow_red_envelope(
+										openid,
+										bind_msisdn,
+										fre_id,
+										sub_fre_id,
+										expired_time,
+										activity_id,
+										APPLY_PROVINCE_ID,
+										fre_from_source,
+										SHARE_TIME
+									)
+									values
+									(
+										#{openid},
+										(select bind_msisdn from user_info where openid = #{openid}),
+										#{freId},
+										#{subFreId},
+										sysdate+#{freExpireDays},
+										#{activityId},
+										#{applyProvinceId},
+										#{freFromSource},
+										sysdate
+								    );
+								    
+			insert into GRAB_FLOW_SUB_RED_ENVELOPE(
+										OPENID,
+										bind_msisdn,
+										SHARE_OPENID,
+										FRE_ID,
+										SUB_FRE_ID,
+										SUB_FRE_FLOW_CURRENCY,
+										EXPIRED_TIME,
+										STATUS,
+										ACTIVITY_ID,
+										APPLY_PROVINCE_ID
+									)
+									values
+									(	
+										#{openid},
+										(select bind_msisdn from user_info where openid = #{openid}),
+										#{openid},
+										#{freId},
+										#{subFreId},
+										#{freFlowCurrency},
+										sysdate+#{subFreExchangeDays},
+										1,
+										#{activityId},
+										#{applyProvinceId}
+									);					    
+		  end;					    
+	</insert>
+	
+	<select id="checkTestUser" resultType="Integer" parameterType="String">
+		select count(1) from DRAW_TEST_USER t where t.openid = #{openid}
+	</select>
+	
+	
+	<select id="queryDistributeFlowInfo" parameterType="Integer" resultMap="distributeFlowRedEnvelope">
+	select min(D.GRAB_TIME) as GRAB_TIME ,min(D.SUB_FRE_FLOW_CURRENCY) as SUB_FRE_FLOW_CURRENCY,min(D.EXPIRED_TIME) as EXPIRED_TIME, min(D.FRE_FROM_SOURCE)
+		as FRE_FROM_SOURCE,count(D.sub_fre_id) as bigCount  from DISTRIBUTE_FLOW_RED_ENVELOPE D where D.FRE_ID=#{freId}
+	</select>
+	
+</mapper>

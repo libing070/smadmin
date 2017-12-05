@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aspire.shakewxpp.wap.mapper.GrabFlowSubRedEnvelopeMapper">
+    <resultMap type="com.aspire.shakewxpp.wap.entity.GrabFlowSubRedEnvelope" id="grabFlowSubRedEnvelope">
+        <result column="openid" 				property="openId"/>
+        <result column="bind_msisdn" 			property="bindMsisdn"/>
+        <result column="share_openid" 			property="shareOpenId"/>
+        <result column="share_bind_msisdn" 		property="shareBindMsisdn"/>
+        <result column="fre_id" 				property="freId"/>
+        <result column="sub_fre_id" 			property="subFreId"/>
+        <result column="sub_fre_flow_currency" 	property="subFreFlowCurrency"/>
+        <result column="subFreFlowCurrency_toFloat" 	property="subFreFlowCurrency_toFloat"/>
+        <result column="grab_time" 				property="grabTime"/>
+        <result column="grabTime_toString" 		property="grabTime_toString"/>
+        <result column="expired_time" 			property="expiredTime"/>
+        <result column="expiredTime_toString" 	property="expiredTime_toString"/>
+        <result column="status" 				property="status"/>
+        <result column="gain_time" 				property="gainTime"/>
+        <result column="activity_id" 			property="activityId"/>
+        <result column="nickname" 				property="nickName"/>
+        <result column="imgName" 				property="imgName"/>
+        <result column="from_openid"			property="fromOpenid"/> 
+        <result column="headimgurl" 			property="headImgUrl"/> 
+        <result column="apply_province_id" 		property="applyProvinceId"/>
+    </resultMap>
+    
+    <resultMap type="com.aspire.shakewxpp.wap.entity.DistributeFlowRedEnvelope" id="distributeFlowRedEnvelope">
+        <result column="openid" 				property="openid"/>
+        <result column="bind_msisdn" 			property="bindMsisdn"/>
+        <result column="fre_flow_currency" 		property="freFlowCurrency"/>
+        <result column="fre_id" 				property="freId"/>
+        <result column="sub_fre_id" 			property="subFreId"/>
+        <result column="sub_fre_flow_currency" 	property="subFreFlowCurrency"/>
+        <result column="grab_time" 				property="grabTime"/>
+        <result column="grabTime_toString" 		property="grabTime_toString"/>
+        <result column="expired_time" 			property="expiredTime"/>
+        <result column="gain_time" 				property="gainTime"/>
+        <result column="fre_from_source" 		property="freFromSource"/>
+        <result column="activity_id" 			property="activityId"/>
+        <result column="imgName" 				property="imgName"/>
+    </resultMap>
+
+    <sql id="queryEnvelopeDomain">
+        SELECT T.openid,
+		       T.bind_msisdn,
+		       T.share_openid,
+		       T.share_bind_msisdn,
+		       T.fre_id,
+		       T.sub_fre_id,
+		       T.sub_fre_flow_currency,
+		       T.grab_time,
+		       T.expired_time,
+		       T.status,
+		       T.gain_time,
+		       T.activity_id,
+		       T.apply_province_id
+		  FROM grab_flow_sub_red_envelope T
+		 WHERE 1 = 1
+    </sql>
+
+    <select id="findEnvelopeByEnvelope" parameterType="com.aspire.shakewxpp.wap.entity.GrabFlowSubRedEnvelope"
+            resultMap="grabFlowSubRedEnvelope">
+        <include refid="queryEnvelopeDomain"/>
+        and T.BIND_MSISDN = #{bindMsisdn}
+        and T.FRE_ID = #{freId}
+        and T.SUB_FRE_ID = #{subFreId}
+    </select>
+
+    <update id="updateEnvelopeByEnvelope" parameterType="com.aspire.shakewxpp.wap.entity.GrabFlowSubRedEnvelope">
+        update GRAB_FLOW_SUB_RED_ENVELOPE T
+            set T.BIND_MSISDN = #{bindMsisdn}
+            <if test="status != null">
+                , T.STATUS = #{status}
+            </if>
+        where 1 = 1
+        and T.BIND_MSISDN = #{bindMsisdn}
+        and T.FRE_ID = #{freId}
+        and T.SUB_FRE_ID = #{subFreId}
+    </update>
+
+	<select id="searchUserSnagRedBagList" parameterType="com.aspire.shakewxpp.wap.entity.GrabFlowSubRedEnvelope" resultMap="grabFlowSubRedEnvelope">
+		   SELECT *
+			  FROM (select ROWNUM RN, T.*
+			          from (SELECT ut.nickname nickName,
+			                       gt.sub_fre_flow_currency subFreFlowCurrency_toFloat,
+			                       gt.status status,
+			                       to_char(gt.expired_time, 'yyyy-mm-dd hh24:mi:ss') expiredTime_toString
+			                  FROM grab_flow_sub_red_envelope gt, user_info ut
+			                 WHERE gt.SHARE_OPENID = ut.openid
+			                   AND gt.openid = #{openId}
+			                   order by gt.grab_time desc ) t
+			 <![CDATA[ where rownum <= #{end})
+			 WHERE rn >= #{start} ]]>
+	</select>
+	
+	<select id="searchUserSnagRedBagListCount" resultType="integer" parameterType="com.aspire.shakewxpp.wap.entity.GrabFlowSubRedEnvelope">
+	  SELECT count(1)
+		FROM grab_flow_sub_red_envelope gt, user_info ut
+       WHERE gt.openid = ut.openid
+         AND gt.openid = #{openId}
+	</select>
+	
+	<select id="searchRedBagQiangGuoCount" resultType="integer" parameterType="com.aspire.shakewxpp.wap.entity.GrabFlowSubRedEnvelope">
+		SELECT count(1)
+		  FROM grab_flow_sub_red_envelope t
+		 WHERE t.fre_id = #{freId}
+		   AND t.openid = #{openId}
+	</select>
+	
+	<select id="searchRedBagPastDueCount" resultType="integer" parameterType="com.aspire.shakewxpp.wap.entity.GrabFlowSubRedEnvelope">
+		SELECT trunc(sysdate - t.expired_time)
+		  FROM distribute_flow_red_envelope t
+		 WHERE t.fre_id = #{freId}
+		 and rownum=1
+	</select>
+	
+	<select id="searchBigRedBagCount" resultType="integer" parameterType="com.aspire.shakewxpp.wap.entity.GrabFlowSubRedEnvelope">
+		select count(1) from distribute_flow_red_envelope t where t.fre_id=#{freId}
+	</select>
+	
+	<select id="searchHaveRedBagCount" resultType="integer" parameterType="com.aspire.shakewxpp.wap.entity.GrabFlowSubRedEnvelope">
+		select count(1) from grab_flow_sub_red_envelope t where t.fre_id=#{freId}
+	</select>
+	
+	<select id="searchFriendSubRedList" resultMap="grabFlowSubRedEnvelope" parameterType="com.aspire.shakewxpp.wap.entity.GrabFlowSubRedEnvelope">
+		SELECT ut.nickname nickName,
+			   ut.headimgurl imgName,
+		       to_char(gt.grab_time, 'yyyy-mm-dd hh24:mi:ss') grabTime_toString,
+		       gt.sub_fre_flow_currency subFreFlowCurrency_toFloat
+		  FROM grab_flow_sub_red_envelope gt, user_info ut
+		 WHERE gt.openid = ut.openid
+		   AND gt.fre_id = #{freId}
+	</select>
+	
+	<select id="searchUserSumSubRedInfo" resultType="float" parameterType="com.aspire.shakewxpp.wap.entity.GrabFlowSubRedEnvelope">
+		SELECT sum(gt.sub_fre_flow_currency)
+		  FROM grab_flow_sub_red_envelope gt
+		 WHERE gt.openid = #{openId}
+	</select>
+	
+	<select id="searchDistributeFlowRedInfo" resultMap="distributeFlowRedEnvelope" parameterType="com.aspire.shakewxpp.wap.entity.GrabFlowSubRedEnvelope">
+		SELECT ut.nickname nickName,ut.headimgurl imgName
+		  FROM distribute_flow_red_envelope dt, user_info ut
+		 WHERE dt.openid = ut.openid
+		   AND dt.fre_id = #{freId}
+		   AND rownum=1
+	</select>
+	
+	<select id="searchRedBagQiangGuoInfo" resultMap="grabFlowSubRedEnvelope" parameterType="com.aspire.shakewxpp.wap.entity.GrabFlowSubRedEnvelope">
+		SELECT to_char(gt.expired_time, 'yyyy-mm-dd hh24:mi:ss') expiredTime_toString,
+		       gt.sub_fre_flow_currency subFreFlowCurrency_toFloat,
+		       gt.sub_fre_id,
+		       gt.status
+		  FROM grab_flow_sub_red_envelope gt
+		 WHERE gt.openid = #{openId}
+		   AND gt.fre_id = #{freId}
+	</select>
+	
+	<update id="saveRedBagInfo" parameterType="com.aspire.shakewxpp.wap.entity.GrabFlowSubRedEnvelope">
+		UPDATE grab_flow_sub_red_envelope gt
+		   SET gt.bind_msisdn = #{bindMsisdn}
+		 WHERE gt.openid = #{openId}
+	</update>
+	
+	<select id="findBindMsisdnCount" resultType="Integer" parameterType="java.util.HashMap">
+		SELECT count(1)
+		  FROM prefix t
+		 WHERE t.provinceid = #{applyProvinceId}
+		   AND (t.prefixnum = #{bindMsisdn7} OR t.prefixnum = #{bindMsisdn8})
+	</select>
+	
+	<!-- 查询每个大红包分享的小红包的数量 -->
+	<select id="querySmallCount" resultType="Integer" parameterType="com.aspire.shakewxpp.wap.entity.GrabFlowSubRedEnvelope">
+	select count(1) from GRAB_FLOW_SUB_RED_ENVELOPE g where g.fre_id=#{freId}
+	</select>
+	
+	
+	<!-- 查询领取的小红包 -->
+	<select id="queryLingQu" resultMap="grabFlowSubRedEnvelope" parameterType="com.aspire.shakewxpp.wap.entity.GrabFlowSubRedEnvelope">
+	 SELECT * FROM (SELECT A.*, ROWNUM RN
+		         FROM (select g.openid,
+                          g.share_bind_msisdn,
+                          g.sub_fre_flow_currency,
+                          g.grab_time,
+                          g.status,ui.nickname,ui.headimgurl
+                     	from GRAB_FLOW_SUB_RED_ENVELOPE g  join user_info ui on g.openid=ui.openid
+		                where g.fre_id = #{freId}
+		                 order by g.grab_time desc) A)
+		WHERE RN BETWEEN #{begin} AND #{ends}
+	</select>
+	
+		<!-- 查询的领取的小红包的流量币的总和 -->
+	<select id="queryFlowSum" resultType="Float" parameterType="Integer">
+	   select sum(g.sub_fre_flow_currency)
+	    	from GRAB_FLOW_SUB_RED_ENVELOPE g
+	   		where g.fre_id = #{freId}
+	</select>
+	
+	<select id="relationForFlowFlowRedPackage" resultType="integer" parameterType="com.aspire.shakewxpp.wap.entity.GrabFlowSubRedEnvelope">
+		select sum(cou)
+		  from (select count(1) as cou
+		          from distribute_flow_red_envelope t
+		         where t.openid = #{openId}
+		           and t.fre_id = #{freId}
+		        union
+		        select count(1) as cou
+		          from grab_flow_sub_red_envelope b
+		         where b.openid = #{openId}
+		           and b.fre_id = #{freId})
+	</select>
+</mapper>

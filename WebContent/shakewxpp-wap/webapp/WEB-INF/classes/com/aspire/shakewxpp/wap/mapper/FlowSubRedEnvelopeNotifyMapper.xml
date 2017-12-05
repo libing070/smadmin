@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aspire.shakewxpp.wap.mapper.FlowSubRedEnvelopeNotifyMapper">
+    <resultMap type="com.aspire.shakewxpp.wap.entity.FlowSubRedEnvelopeNotify" id="flowSubRedEnvelopeNotify">
+        <id column="transactionid" property="transactionId"/>
+        <result column="bind_msisdn" property="bindMsisdn"/>
+        <result column="fre_id" property="freId"/>
+        <result column="sub_fre_id" property="subFreId"/>
+        <result column="sub_fre_flow_currency" property="subFreFlowCurrency"/>
+        <result column="expired_time" property="expiredTime"/>
+        <result column="status" property="status"/>
+        <result column="result" property="result"/>
+        <result column="result_desc" property="resultDesc"/>
+        <result column="activity_id" property="activityId"/>
+        <result column="apply_province_id" property="applyProvinceId"/>
+    </resultMap>
+
+    <sql id="queryNotifyDomain">
+      select T.TRANSACTIONID,
+              T.BIND_MSISDN,
+              T.FRE_ID,
+              T.SUB_FRE_ID,
+              T.SUB_FRE_FLOW_CURRENCY,
+              T.EXPIRED_TIME,
+              T.STATUS,
+              T.result,
+              T.RESULT_DESC,
+              T.ACTIVITY_ID,
+              T.APPLY_PROVINCE_ID
+        from FLOW_SUB_RED_ENVELOPE_NOTIFY T
+       where 1 = 1
+    </sql>
+
+    <select id="getSequeneForTransactionId" resultType="string">
+        select ltrim(TO_CHAR(SEQ_ACTIVITY_ID.NEXTVAL, '00000000')) as SEQ from DUAL
+    </select>
+
+    <select id="queryNotify" parameterType="com.aspire.shakewxpp.wap.entity.FlowSubRedEnvelopeNotify"
+            resultMap="flowSubRedEnvelopeNotify">
+        <include refid="queryNotifyDomain"/>
+        <if test="bindMsisdn != null and bindMsisdn != ''">
+            and T.BIND_MSISDN = #{bindMsisdn}
+        </if>
+        <if test="freId != null and freId != ''">
+            and T.FRE_ID = #{freId}
+        </if>
+        <if test="subFreId != null and subFreId != ''">
+            and T.SUB_FRE_ID = #{subFreId}
+        </if>
+        <if test="status != null">
+            and T.STATUS = #{status}
+        </if>
+    </select>
+
+    <select id="queryNotifyCount" parameterType="com.aspire.shakewxpp.wap.entity.FlowSubRedEnvelopeNotify"
+            resultType="integer">
+        select count(1)
+        from (
+        <include refid="queryNotifyDomain"/>
+        <if test="bindMsisdn != null and bindMsisdn != ''">
+            and T.BIND_MSISDN = #{bindMsisdn}
+        </if>
+        <if test="freId != null and freId != ''">
+            and T.FRE_ID = #{freId}
+        </if>
+        <if test="subFreId != null and subFreId != ''">
+            and T.SUB_FRE_ID = #{subFreId}
+        </if>
+        <if test="status != null">
+            and T.STATUS = #{status}
+        </if>
+        )
+    </select>
+
+    <select id="findNotify" parameterType="string" resultMap="flowSubRedEnvelopeNotify">
+        <include refid="queryNotifyDomain"/>
+        and T.TRANSACTIONID = #{transactionId}
+    </select>
+
+    <insert id="insertNotify" parameterType="com.aspire.shakewxpp.wap.entity.FlowSubRedEnvelopeNotify">
+        insert into FLOW_SUB_RED_ENVELOPE_NOTIFY
+        (
+        TRANSACTIONID,
+        BIND_MSISDN,
+        FRE_ID,
+        SUB_FRE_ID,
+        SUB_FRE_FLOW_CURRENCY,
+        <if test="expiredTime != null">
+        EXPIRED_TIME,
+        </if>
+        <if test="status != null">
+        STATUS,
+        </if>
+        <if test="result != null">
+        result,
+        </if>
+        <if test="resultDesc != null and resultDesc != ''">
+        RESULT_DESC,
+        </if>
+        ACTIVITY_ID,
+        APPLY_PROVINCE_ID
+        )
+        values
+        (
+        #{transactionId},
+        #{bindMsisdn},
+        #{freId},
+        #{subFreId},
+        #{subFreFlowCurrency},
+        <if test="expiredTime != null">
+        #{expiredTime},
+        </if>
+        <if test="status != null">
+        #{status},
+        </if>
+        <if test="result != null">
+        #{result},
+        </if>
+        <if test="resultDesc != null and resultDesc != ''">
+        #{resultDesc},
+        </if>
+        #{activityId},
+        #{applyProvinceId}
+        )
+    </insert>
+
+    <update id="updateNotify" parameterType="com.aspire.shakewxpp.wap.entity.FlowSubRedEnvelopeNotify">
+        update FLOW_SUB_RED_ENVELOPE_NOTIFY
+        set TRANSACTIONID = #{transactionId},
+        BIND_MSISDN = #{bindMsisdn},
+        FRE_ID = #{freId},
+        SUB_FRE_ID = #{subFreId},
+        SUB_FRE_FLOW_CURRENCY = #{subFreFlowCurrency}
+        <if test="expiredTime != null">
+            ,EXPIRED_TIME = #{expiredTime}
+        </if>
+        <if test="status != null">
+            ,STATUS = #{status}
+        </if>
+        <if test="result != null">
+            ,result = #{result}
+        </if>
+        <if test="resultDesc != null and resultDesc != ''">
+            ,RESULT_DESC = #{resultDesc}
+        </if>
+        where TRANSACTIONID = #{transactionId}
+    </update>
+
+    <delete id="deleteNotify" parameterType="string">
+      delete FLOW_SUB_RED_ENVELOPE_NOTIFY T where T.TRANSACTIONID = #{transactionId}
+    </delete>
+</mapper> 

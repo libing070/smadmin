@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+    <!DOCTYPE mapper 
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aspire.shakewxpp.wap.mapper.UserMapper">
+	<!-- 
+		BIND_MSISDN	NVARCHAR2(20)	Y			绑定手机号
+		SCORE	NUMBER	Y			积分
+		NICKNAME	NVARCHAR2(30)	Y			用户的昵称 
+		CREATE_DATE	DATE	Y	sysdate		
+		UPDATE_DATE	DATE	Y	sysdate		
+		OPENID	NVARCHAR2(32)	N			API接口用户标识
+		SEX	NUMBER	Y			0：未知，1：男性，2：女性
+		SUBSCRIBE	NUMBER	N	1		0：取消关注状态，拉去不到其余信息；1：关注状态
+		CITY	NVARCHAR2(32)	Y			用户所在城市 
+		COUNTRY	NVARCHAR2(32)	Y			用户所在国家
+		PROVINCE	NVARCHAR2(32)	Y			用户所在省份 
+		LANGUAGE	NVARCHAR2(20)	Y			用户的语言，简体中文为zh_CN 
+		HEADIMGURL	NVARCHAR2(100)	Y			用户头像，最后一个数值代表正方形头像大小（有0、46、64、96、132数值可选，0代表640*640正方形头像），用户没有头像时该项为空 
+		SUBSCRIBE_TIME	DATE	Y			最新关注时间
+		REMARK	NVARCHAR2(100)	Y			备注
+				
+	 -->
+	<resultMap type="com.aspire.shakewxpp.wap.entity.User" id="User">
+		<result column="BIND_MSISDN" property="bindMsisdn" />
+		<result column="SCORE" property="score" />
+		<result column="NICKNAME" property="nickName" />
+		<result column="OPENID" property="openID" />
+		<result column="USER_GROUP_ID" property="userGroupId" />
+		<result column="USER_GROUP_NAME" property="userGroupName" />
+		<result column="SEX" property="sex" />
+		<result column="SUBSCRIBE" property="subscribe" />
+		<result column="CITY" property="city" />
+		<result column="COUNTRY" property="country" />
+		<result column="PROVINCE" property="province" />
+		<result column="LANGUAGE" property="language" />
+		<result column="HEADIMGURL" property="headImgUrl" />
+		<result column="REMARK" property="remark" />
+		<result column="weixin_app_no" property="weixinAppNo" />
+		<result column="SUBSCRIBE_TIME" property="subscribeTime" jdbcType="DATE" javaType="java.util.Date"/>	
+		<result column="CREATE_DATE" property="createDate" jdbcType="DATE" javaType="java.util.Date"/>
+		<result column="UPDATE_DATE" property="updateDate" jdbcType="DATE" javaType="java.util.Date"/>		
+	</resultMap>
+	
+	<!-- 根据openid获取用户信息 -->
+	<select id="queryUserOne" parameterType="com.aspire.shakewxpp.wap.entity.User" resultMap="User">
+		SELECT * FROM
+		    USER_INFO  T,user_group_relation R,user_group G
+		where  T.Openid = r.openid and r.user_group_id =g.user_group_id and T.Openid = #{openID}
+	</select>
+	
+	<insert id="insertOpenId" parameterType="com.aspire.shakewxpp.wap.entity.User">
+	       declare  
+	          v_user_group_id number;
+	          v_count number;
+	        begin 
+	        		select count(1) into v_count from USER_INFO where OPENID = #{openID}; 
+	   <![CDATA[if v_count > 0 then ]]>
+	       			update USER_INFO t
+	        		set 
+			        	<if test="bindMsisdn != null and bindMsisdn != ''" >
+			        		t.BIND_MSISDN=#{bindMsisdn},
+			        	</if>
+			        	<if test="subscribe != null" >
+			        		t.SUBSCRIBE = #{subscribe},
+			        	</if>
+		        		t.UPDATE_DATE = sysdate
+		        	where t.OPENID = #{openID};	
+	        	else
+	        		insert into USER_INFO(
+	        			OPENID,	
+						WEIXIN_APP_NO,
+						<if test="subscribe != null" >
+			        		SUBSCRIBE,
+			        	</if>
+						SUBSCRIBE_TIME
+					) 
+					values(
+						#{openID},
+						#{weixinAppNo},
+						<if test="subscribe != null" >
+			        		#{subscribe},
+			        	</if>
+						sysdate
+					);
+					select t.user_group_id into v_user_group_id
+						  from USER_GROUP t, shirouser sh
+						 where sh.id = t.shirouser_id
+						   and sh.weixin_app_no= #{weixinAppNo}
+						   and t.user_group_name = '未分组';
+					insert into USER_GROUP_RELATION(USER_GROUP_RELATION_ID,USER_GROUP_ID,OPENID) 
+					values(
+						SEQ_USER_GROUP_RELATION_ID.nextval,
+						v_user_group_id,
+						#{openID}
+					);
+				end if;	
+	        end;  
+	</insert>
+	
+	<update id="updateUser" parameterType="com.aspire.shakewxpp.wap.entity.User">
+		update user_info t 
+		<set>
+			<if test="score != null and score != ''">
+				 t.SCORE = #{score},
+			</if>
+			<if test="remark != null and remark != ''">
+				 t.REMARK = #{remark},
+			</if>
+			<if test="bindMsisdn != null and bindMsisdn != ''">
+				t.BIND_MSISDN = #{bindMsisdn},
+			</if>
+			<if test="dynamicFields.bindMsisdn != null and dynamicFields.bindMsisdn != ''">
+				 t.BIND_MSISDN = '',
+			</if>
+			t.UPDATE_DATE = SYSDATE
+		</set>
+		WHERE t.OPENID =#{openID}
+	</update>
+	
+	
+	<!-- 检查手机号是否已绑定其它的微信号 -->
+	<select id="checkForMsisdnIsBind" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(1) from USER_INFO t, shirouser sh where t.bind_msisdn = #{msisdn} and  t.weixin_app_no = sh.weixin_app_no and sh.id = #{shirouserId}
+	</select>
+
+	<!-- 根据weixinAppNo查下appid,appSecret -->
+	<select id="queryAppMessageByWeixinAppNo" parameterType="java.lang.String" resultType="java.util.Map">
+		select t.id,t.appid,t.appsecret,t.weixin_app_name,t.weixin_app_name_view from SHIROUSER t where t.weixin_app_no = #{weixinAppNo}
+	</select>
+	
+	<select id="queryShirouserIdByOpenid" parameterType="java.lang.String" resultType="java.lang.Integer">
+		select max(sh.id) from user_info u,shirouser sh where u.weixin_app_no = sh.weixin_app_no and u.openid = #{openid}
+	</select>
+	
+	<select id="queryWeixinAppNoByOpenid" parameterType="java.lang.String" resultType="java.lang.String">
+		select max(sh.weixin_app_no) as weixin_app_no from user_info u,shirouser sh where u.weixin_app_no = sh.weixin_app_no and u.openid = #{openid}
+	</select>
+	
+	<select id="queryShirouserIdByWeixinAppNo" parameterType="java.lang.String" resultType="java.lang.Integer">
+		select t.id from SHIROUSER t where t.weixin_app_no = #{weixinAppNo}
+	</select>
+	
+	<select id="queryWeixinAppNameVieByShirouserId" parameterType="java.lang.Integer" resultType="java.lang.String">
+		select t.weixin_app_name_view from SHIROUSER t where t.id = #{shirouserId}
+	</select>
+	
+	<select id="queryUserGroup" parameterType="java.lang.String" resultType="java.lang.String">
+		select ug.user_group_name from user_group_relation t,user_group ug where ug.user_group_id = t.user_group_id  and t.openid = #{openId}
+	</select>
+</mapper> 

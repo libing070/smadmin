@@ -1,0 +1,86 @@
+package com.aspire.shakewxpp.wap.controller;
+
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.aspire.shakewxpp.wap.entity.ConfigPojo;
+import com.aspire.shakewxpp.wap.service.ConfigService;
+import com.aspire.shakewxpp.wap.util.DateUtil;
+import com.aspire.shakewxpp.wap.util.GetConfigFile;
+
+
+
+@Controller
+public class SystemConfigManagerController {
+	protected static Logger logger =  LoggerFactory.getLogger(SystemConfigManagerController.class);
+	
+	
+	@Resource(name = "configService")
+	private ConfigService configService;
+	
+	@RequestMapping(value = "/refreshSystemConfig.tv")
+	public void refreshSystemConfig(HttpServletRequest request,HttpServletResponse response)
+	{
+		logger.debug("进入SystemConfigManagerController.refreshSystemConfig方法");
+		try {
+			GetConfigFile.refreshSystemConfig();
+		} catch (Exception e) {
+			logger.error("刷新系统配置项出现异常",e);
+		}
+		
+		try {
+			GetConfigFile getConfigFile = GetConfigFile.getInstance();
+			Set set = getConfigFile.viewProps();
+			Iterator ite = set.iterator();
+			
+			response.setContentType("text/html;charset=utf-8");
+			response.getWriter().println("<html><body><table>");
+			while(ite.hasNext()){
+				String key = (String)ite.next();
+				response.getWriter().println("<tr><td>");
+				response.getWriter().println(key+"="+getConfigFile.getProperties(key));
+				response.getWriter().println("</td></tr>");
+			}
+			
+			response.getWriter().println("</table></body></html>");
+		} catch (Exception e) {
+			logger.error("打印配置信息出现异常",e);
+		}
+	}
+	
+	
+	@RequestMapping(value = "/refreshDrawConfig.tv")
+	public void refreshDrawConfig(HttpServletRequest request,HttpServletResponse response) throws Exception
+	{
+		GetConfigFile getConfigFile = GetConfigFile.getInstance();
+		String configTable = getConfigFile.getProperties("provinceConfigTable");
+		
+		configService.getNextConfigData(configTable);
+		
+		String refreshDate = DateUtil.getCurDate(DateUtil.yyyyMMdd_EN);
+		getConfigFile.setRefreshDate(refreshDate);	
+		
+		response.setContentType("text/html;charset=utf-8");
+		response.getWriter().println("<html><body><table>");
+		List<ConfigPojo> nowConfigPojoList = getConfigFile.getConfigPojoList();
+		ConfigPojo nowConfigPojo = nowConfigPojoList.get(0);
+		
+		List<ConfigPojo> nextConfigPojoList = getConfigFile.getNextConfigPojoList();
+		ConfigPojo _configPojo = nextConfigPojoList.get(0);
+		
+		response.getWriter().println("<tr><td>进行中的抽奖配置(时间段:"+nowConfigPojo.getTimeRange()+";红包数:"+nowConfigPojo.getFreCount()+")</td></tr>");
+		response.getWriter().println("<tr><td>明天的抽奖配置(时间段:"+_configPojo.getTimeRange()+";红包数:"+_configPojo.getFreCount()+")</td></tr>");
+
+		response.getWriter().println("</table></body></html>");
+	}
+}

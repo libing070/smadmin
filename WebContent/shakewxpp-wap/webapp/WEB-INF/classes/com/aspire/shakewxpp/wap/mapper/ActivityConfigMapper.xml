@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+    <!DOCTYPE mapper 
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aspire.shakewxpp.wap.mapper.ActivityConfigMapper">
+	<resultMap type="com.aspire.shakewxpp.wap.entity.ConfigPojo" id="configPojo">
+		<result column="activity_id" property="activityId" />
+	    <result column="activity_status" property="activityStatus" />
+		<result column="activity_name" property="activityName" />
+		<result column="fre_count" property="freCount" />
+		<result column="time_range" property="timeRange" />
+		<result column="max_user_count" property="maxUserCount" />
+		<result column="sub_fre_count_peruser" property="subFreCountPeruser" />
+		<result column="fre_expire_days" property="freExpireDays" />
+		<result column="sub_fre_exchange_days" property="subFreExchangeDays" />
+		<result column="flowpkg_sub_fre_count_peruser" property="flowpkgSubFreCountPeruser" />
+		<result column="bind_sub_fre_count_peruser" property="bindSubFreCountPeruser" />
+		<result column="fre_total_shared_gains" property="freTotalSharedGains" />
+		<result column="non_bind_upper_limit" property="nonBindUpperLimit" />
+		<result column="non_bind_upper_limit_percent" property="nonBindUpperLimitPercent" />
+		<result column="non_bind_lower_limit" property="nonBindLowerLimit" />
+		<result column="non_bind_lower_limit_percent" property="nonBindLowerLimitPercent" />
+		<result column="bind_upper_limit" property="bindUpperLimit" />
+		<result column="bind_upper_limit_percent" property="bindUpperLimitPercent" />
+		<result column="bind_lower_limit" property="bindLowerLimit" />
+		<result column="bind_lower_limit_percent" property="bindLowerLimitPercent" />	
+		<result column="activity_desc" property="activityDesc" />
+		<result column="apply_province_id" property="applyProvinceId" />
+	</resultMap>
+	
+	<!-- 根据openid获取用户信息 -->
+	<select id="getConfigData" resultMap="configPojo" parameterType="java.util.Map">
+		select t.activity_id,
+			   t.activity_status,
+			   t.activity_name,
+		       t.fre_count,
+		       t.time_range,
+		       t.max_user_count,
+		       t.sub_fre_count_peruser,
+		       t.fre_expire_days,
+		       t.sub_fre_exchange_days,
+		       t.flowpkg_sub_fre_count_peruser,
+		       t.bind_sub_fre_count_peruser,
+		       t.fre_total_shared_gains,
+		       t.non_bind_upper_limit,
+		       t.non_bind_upper_limit_percent,
+		       t.non_bind_lower_limit,
+		       t.non_bind_lower_limit_percent,
+		       t.bind_upper_limit,
+		       t.bind_upper_limit_percent,
+		       t.bind_lower_limit,
+		       t.bind_lower_limit_percent,
+		       t.activity_desc,
+		       t.apply_province_id
+		  from ${configTable} t
+		 where t.activity_status != 2
+	</select>
+</mapper> 

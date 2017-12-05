@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<property name="APP_Name" value="shakewxpp-wap" />
+	<contextName>${APP_Name}</contextName>
+	<property name="LOG_HOME" value="${user.dir}/${APP_Name}" />
+	<!-- 控制台输出 -->
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符 -->
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{10} -
+				%msg%n
+			</pattern>
+		</layout>
+	</appender>
+
+	<appender name="ERROR_FILE"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>ERROR</level>
+			<onMatch>ACCEPT</onMatch>
+			<onMismatch>DENY</onMismatch>
+		</filter>
+		<File>${LOG_HOME}/logs/error/error-shakewxpp-wap.log</File>
+		
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">   
+	      <fileNamePattern>${LOG_HOME}/logs/error/error-shakewxpp-wap.%d{yyyy-MM-dd}.log</fileNamePattern>   
+      	  <maxHistory>40</maxHistory>    
+ 		</rollingPolicy>
+ 		
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<Pattern>%date [%thread] %-5level %logger{80} - %msg%n</Pattern>
+		</layout>
+	</appender>
+
+	<appender name="WARN_FILE"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>WARN</level>
+			<onMatch>ACCEPT</onMatch>
+			<onMismatch>DENY</onMismatch>
+		</filter>
+		<File>${LOG_HOME}/logs/warn/warn-shakewxpp-wap.log</File>
+		
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">   
+	      <fileNamePattern>${LOG_HOME}/logs/warn/warn-shakewxpp-wap.%d{yyyy-MM-dd}.log</fileNamePattern>   
+      	  <maxHistory>40</maxHistory>    
+ 		</rollingPolicy>
+ 		
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<Pattern>%date [%thread] %-5level %logger{80} - %msg%n</Pattern>
+		</layout>
+	</appender>	
+	
+	<appender name="INFO_FILE"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>INFO</level>
+			<onMatch>ACCEPT</onMatch>
+			<onMismatch>DENY</onMismatch>
+		</filter>
+		<File>${LOG_HOME}/logs/info/info-shakewxpp-wap.log</File>
+		
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">   
+	      <fileNamePattern>${LOG_HOME}/logs/info/info-shakewxpp-wap.%d{yyyy-MM-dd}.log</fileNamePattern>   
+      	  <maxHistory>40</maxHistory>    
+ 		</rollingPolicy>
+ 		
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<Pattern>%date [%thread] %-5level %logger{80} - %msg%n</Pattern>
+		</layout>
+	</appender>
+
+	<appender name="DEBUG_FILE"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>DEBUG</level>
+			<onMatch>ACCEPT</onMatch>
+			<onMismatch>DENY</onMismatch>
+		</filter>
+		<File>${LOG_HOME}/logs/debug/debug-shakewxpp-wap.log</File>
+		
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">   
+	      <fileNamePattern>${LOG_HOME}/logs/debug/debug-shakewxpp-wap.%d{yyyy-MM-dd}.log</fileNamePattern>   
+      	  <maxHistory>40</maxHistory>    
+ 		</rollingPolicy>
+ 		
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<Pattern>%date [%thread] %-5level %logger{80} - %msg%n</Pattern>
+		</layout>
+	</appender>
+	
+	<appender name="REPORT_INFO_FILE"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>INFO</level>
+			<onMatch>ACCEPT</onMatch>
+			<onMismatch>DENY</onMismatch>
+		</filter>
+		<File>${LOG_HOME}/logs/report/info-shakewxpp-wap.log</File>
+		
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">   
+	      <fileNamePattern>${LOG_HOME}/logs/report/report-shakewxpp-wap.%d{yyyy-MM-dd}.log</fileNamePattern>   
+      	  <maxHistory>40</maxHistory>    
+ 		</rollingPolicy>
+		
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<Pattern>%msg%n</Pattern>
+		</layout>
+	</appender>
+	
+	<!-- report日志输出 -->
+	<logger name="report_log" level="INFO" additivity="false">  
+        <appender-ref ref="REPORT_INFO_FILE" />
+    </logger>  
+    
+    
+	<!-- 日志输出级别 -->
+	<root level="DEBUG">
+		<!--屏蔽输出到控制台 <appender-ref ref="STDOUT" /> -->
+		<appender-ref ref="DEBUG_FILE" />
+		<appender-ref ref="INFO_FILE" />
+		<appender-ref ref="WARN_FILE" />
+		<appender-ref ref="ERROR_FILE" />
+	</root>
+</configuration>

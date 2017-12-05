@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+    <!DOCTYPE mapper 
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aspire.shakewxpp.wap.mapper.UserNotifyMapper">
+
+	<insert id="addUserNotifyData" parameterType="com.aspire.shakewxpp.wap.entity.UserNotifyPojo">
+			insert into SMS_NOTIFY(
+									sms_id,	
+									<if test="openid != null and openid != ''">
+									OPENID,
+									</if>
+									<if test="msisdn != null and msisdn != ''">
+									MSISDN,
+									</if>
+									<if test="freId != null">
+									FRE_ID,
+									</if>
+									<if test="subFreId != null">
+									SUB_FRE_ID,
+									</if>
+									<if test="productName != null and productName != ''">
+									PRODUCT_NAME,
+									</if>
+									WEIXINAPPNO,
+									SMS_TYPE
+									) 
+									values(
+										SEQ_SMS_ID.nextval,	
+										<if test="openid != null and openid != ''">
+										#{openid},
+										</if>
+										<if test="msisdn != null and msisdn != ''">
+										#{msisdn},
+										</if>
+										<if test="freId != null">
+										#{freId},
+										</if>
+										<if test="subFreId != null">
+										#{subFreId},
+										</if>
+										<if test="productName != null and productName != ''">
+										#{productName},
+										</if>							
+										#{weixinAppNo},
+										#{smsType}
+									)
+	</insert>
+</mapper> 

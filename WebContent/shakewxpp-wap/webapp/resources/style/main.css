@@ -1,0 +1,254 @@
+@charset "utf-8";
+body {
+	min-width:320px;
+	max-width:800px;
+	margin:0 auto;
+	background-color:#eeeeee;
+	font-size:12px/1em;
+}
+.clearfix{clear:both;}
+.bg-red{background-color:#c41717;}
+.bg-yellow{background-color:#fff9d6;}
+.bg-white{background-color:#ffffff;}
+.bg-gray{background-color:#eeeeee;}
+.jiange-block{margin:10px auto;}
+.blank-jiange{height:10px;}
+.font-block{padding:10px;}
+.centertext{text-align:center;}
+.font-small{font-size:0.8em;}
+.font-smaller{font-size:0.6em;}
+.xiahuaxian{border-bottom:#999 solid 1px;}
+.notes1{text-align:center; color:#b8b8b8; font-size:0.8em;}
+.notes2{color:#b8b8b8; font-size:0.8em;}
+.font-red{color:#e83226;}
+.font-white{color:#FFF; text-align:center;}
+.font-gray{color:#999999;}
+.font-red-big{color:#e83226; text-align:center; font-size:1.5em; font-weight:bold;}
+.font-red-big2{color:#e83226; font-size:1.2em;}
+.font-yellow-big{color:#fffc13; text-align:center; font-size:1.5em; font-weight:bold;}
+.yellow-btn{color:#eb2d0b; text-align:center; border-radius:4px; margin:10px; overflow:hidden; padding:10px 0; font-size:1.2em; border-bottom:#ffb909 solid 4px; background-image: -moz-linear-gradient(top, #feffb6, #ffdd1d);
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#feffb6), to(#ffdd1d));
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#feffb6,endColorstr=#ffdd1d);
+    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#feffb6,endColorstr=#ffdd1d)";
+	background-color:#ffdd1d;}
+.gray-btn{color:#ffae00; text-align:center; border-radius:4px; margin:10px; overflow:hidden; padding:10px 0; font-size:1.2em; border-bottom:#b5b5b5 solid 4px; background-image: -moz-linear-gradient(top, #f1f1f1, #d1d1d1);
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#f1f1f1), to(#d1d1d1));
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#f1f1f1,endColorstr=#d1d1d1);
+    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#f1f1f1,endColorstr=#d1d1d1)";
+	background-color:#d1d1d1;}
+.red-btn{color:#fff; text-align:center; border-radius:4px; margin:10px; overflow:hidden; padding:10px 0; font-size:1.2em; border-bottom:#ab4836 solid 4px; 
+	background-color:#e7332f;}
+
+/*未绑定*/
+.nobanding{
+	background-color:#FFF;
+	border:#f05133 solid 3px;
+	text-align:center;
+	margin:5% 6%;
+	background-image: url(../images/icon_free.png);
+	background-repeat: no-repeat;
+	background-position: right top;
+	background-size:60px;
+}
+.nobanding .bigtext{color:#e83226; font-size:1.5em; padding:5px; font-weight:bold;}
+.nobanding .smalltext{color:#515151; font-size:1em; padding:5px;}
+
+/*获得红包*/
+.huode-layout{margin:15px 20px;}
+
+/*活动说明*/
+.guize{margin:0; background-color:#fff; overflow:hidden; padding:2% 0;}
+.guize-title{background-color:#ee372c; color:#FFF; font-size:1.2em; padding:5px 10px; float:left; height:30px; line-height:30px;}
+.guize-conner{
+	background-color:#FFF;
+	border-top:20px solid #ee372c;
+	border-right:20px solid #fff;
+	border-bottom:20px solid #ee372c;
+	border-left:20px solid #ee372c;
+	float:left;
+}
+.guize-content{width:86%; margin:auto; overflow:hidden; font-size:1em;}
+
+/*关联手机号*/
+.guanlian-border{border:#bdbdbd solid 1px; border-radius:4px; margin:10px; overflow:hidden; background-color:#FFF;}
+.guanlian-name{float:left; width:30%; color:#b8b8b8; max-width:70px; font-size:0.8em; line-height:30px;}
+.guanlian-ziduan{float:left; width:70%; color:#666666; line-height:30px;}
+.guanlian-ziduan input{height:30px; line-height:30px;}
+.guanlian-layout{padding:5px 10px; overflow:hidden;}
+.guanlian-input{border:#bdbdbd solid 1px; border-radius:4px; float:left; margin:0; height:30px; -webkit-appearance:none;}
+.guanlian-input-phone{width:100%; -webkit-appearance:none; padding:0;}
+.guanlian-input-authcode{width:40%; height:30px; -webkit-appearance:none; padding:0;}
+.guanlian-authcode{border-radius:4px; line-height:30px; padding:0 5px; overflow:hidden; background-color:#ff8a01; color:#FFF; float:right; height:30px; font-size:0.8em; border:#ff8a01 1px solid; margin-right:-2px;}
+.guanlian-btn{color:#FFF; text-align:center; border-radius:4px; margin:5px 10px; overflow:hidden; background-color:#e43f37; padding:10px 0; font-size:1.2em;}
+
+/*抢红包*/
+.qiang-input{height:24px; line-height:24px; margin:0; padding:0;}
+.qiang-input-phone{width:100%; font-size:0.8em; line-height:normal;}
+.qiang-input-authcode{width:45%; float:left; font-size:0.8em; line-height:normal;}
+.qiang-authcode-btn{width:40%; padding:0 5px; float:right; border-radius:4px; overflow:hidden; background-color:#ff8a01; color:#FFF; float:right; font-size:0.8em; text-align:center; margin:0; height:28px; line-height:28px;}
+
+.qiang-layout{margin:5px 10px; position:relative; height:270px; padding:0;}
+.qiang-layout-red{margin:5px 10px; position:relative; height:90px; padding:0;}
+.qiang-topborder{background-color:#940000; height:10px; border-radius:4px;}
+.qiang-block{
+	background-color: #fffcf6;
+	background-image: url(../images/bg_qiang.png);
+	background-repeat: repeat-x;
+	background-position: top;
+	width:90%;
+	position:absolute;
+	top:5px;
+	left:5%;
+	overflow:hidden;
+	padding:0 inherit;
+}
+.qiang-bottom{
+	background-image: url(../images/bottom_qiang.png);
+	background-repeat: repeat-x;
+	background-position: top left;
+	background-color:#c41717;
+	background-size:25px;
+	margin:auto;
+	height:30px;
+}
+
+.qiang-topborder{background-color:#940000; height:10px; border-radius:4px;}
+.qiang-block-red{
+	background-color: #e7332f;
+	background-image: url(../images/bg_qiang_red.png);
+	background-repeat: repeat-x;
+	background-position: top;
+	width:90%;
+	position:absolute;
+	top:5px;
+	left:5%;
+	overflow:hidden;
+	padding:0 inherit;
+}
+.qiang-bottom-red{
+	background-image: url(../images/bottom_qiang_red.png);
+	background-repeat: repeat-x;
+	background-position: top left;
+	background-color:#fff9d6;
+	background-size:25px;
+	margin:auto;
+	height:30px;
+}
+
+.qiang-login{margin:0 10px;}
+.qiang-user{color:#fefd90; padding-left:10px;}
+.qiang-touxiang{margin:5px 5px 0 5px;}
+.qiang-mingxi{font-size:0.8em; color:#fff; overflow:hidden; width:100%; margin:auto;}
+.qiang-mingxi .l{float:left; line-height:30px;}
+.qiang-mingxi .r{float:right; line-height:30px; font-size:1.2em;}
+
+.qiang-friend{width:100%; margin:8px auto 0; overflow:hidden;}
+.qiang-friend-title{
+	text-align:center;
+	background-image: url(../images/bg_line_title.png);
+	background-repeat: repeat-x;
+	background-position: center center;
+	color:#ffffff;
+	font-size:1em;
+}
+.qiang-friend-title span{padding:5px 10px;}
+
+.qiang-friend-l{float:left; width:36%;}
+.qiang-friend-l img{padding-right:5px;}
+.qiang-friend-m{float:left; width:39%; font-size:0.65em;}
+
+.qiang-friend-r{float:right; width:24%; text-align:right;font-size:0.8em;}
+
+.qiang-friend-text{font-size:0.8em; color:#fffd8c; line-height:30px;}
+
+/*抢光了*/
+.qiangguang-touxiang{margin:5px 5px 0 5px;}
+.qiangguang-user{color:#454545; padding-left:10px;}
+.qiangguang-conner{
+	overflow:hidden;
+	width:0px;
+	height:0px;
+	border-top:8px solid transparent;
+	border-right:8px solid transparent;
+	border-bottom:8px solid #ffe29f;
+	border-left:8px solid transparent;
+	margin-left:60px;
+}
+.qiangguang-tishi-block{margin-top:-10px; z-index:100;}
+.qiangguang-tishi{background-color:#ffe29f; border-radius:4px; margin:0 20px; overflow:hidden; padding:6px 5px 4px; text-align:center;}
+.qiangguang-tishi .yinhao{font-size:1.2em; color:#ff9600;}
+.qiangguang-friend{width:100%; margin:8px auto; overflow:hidden;}
+.qiangguang-friend-title{
+	text-align:center;
+	background-image: url(../images/bg_line_title.png);
+	background-repeat: repeat-x;
+	background-position: center center;
+	color:#333;
+	font-size:1em;
+}
+.qiangguang-friend-title span{padding:5px 10px;}
+
+.qiangguang-friend-l{float:left; width:36%;}
+.qiangguang-friend-l img{padding-right:5px;}
+.qiangguang-friend-m{float:left; width:39%; font-size:0.65em;}
+.qiangguang-friend-r{float:right; width:24%; text-align:right;}
+.qiangguang-friend-text{font-size:0.8em; color:#333; line-height:30px;}
+
+.qiangguang-mingxi{font-size:0.8em; overflow:hidden; width:100%; margin:auto;}
+.qiangguang-mingxi .l{float:left; line-height:30px;}
+.qiangguang-mingxi .r{float:right; line-height:30px; font-size:1.2em;}
+
+/*发出的红包*/
+.sendedlist{border-bottom:#CCC solid 1px; overflow:hidden; padding:0 10px;}
+.sendedlist .l{width:70%; float:left; padding:5px;}
+.sendedlist .m{width:22%; float:left; line-height:2em; font-size:1.2em;}
+.sendedlist .r{width:3%; float:right; font-size:1.2em; color:#666; line-height:2em;}
+.sendedlist .date{padding-left:8px; color:#999;}
+
+/*领取红包*/
+.lingquhead{border-bottom:#ed4b44 solid 3px; overflow:hidden; padding:10px;}
+.lingquhead .l{width:60%; float:left; padding:5px;}
+.lingquhead .r{width:30%; float:right; line-height:3em; font-size:0.8em; color:#666; text-align:right;}
+
+.lingqu-title-block{margin:5px 10px 0; overflow:hidden;}
+.lingqu-title-block2{margin:5px 0; overflow:hidden;}
+.linqu-tishiyu{color:#14b727; padding:5px;}
+.lingqu-title{
+	text-align:center;
+	background-image: url(../images/bg_line_title_gray.png);
+	background-repeat: repeat-x;
+	background-position: center center;
+	color:#eb2d0b;
+	font-size:1em;
+}
+.lingqu-title span{padding:5px 10px;}
+.lingqu-mingxi{overflow:hidden;}
+.lingqu-mingxi .l{width:55%; float:left;}
+.lingqu-mingxi .r{width:40%; float:right; text-align:right;}
+.lingqu-mingxi-conner{
+	overflow:hidden;
+	width:0px;
+	height:0px;
+	border-top:8px solid transparent;
+	border-right:8px solid transparent;
+	border-bottom:8px solid #fff;
+	border-left:8px solid transparent;
+	margin:auto;
+}
+
+.lingqulist{border-bottom:#CCC solid 1px; overflow:hidden; padding:0 5px;}
+.lingqulist .l{width:50%; float:left; padding:10px 0;}
+.lingqulist .r{width:40%; float:right; padding:10px 0; text-align:right;}
+
+/*抢到的红包*/
+.qiangdao-block{margin:5px; overflow:hidden;}
+.qiangdao-list{margin:auto; border-bottom:#CCC 1px solid; overflow:hidden; padding:5px 0;}
+.qiangdao-list .l{width:70%; float:left; line-height:1.5em;}
+.qiangdao-list .r{width:20%; float:right; line-height:3em;}
+.qiangdao-list .l span{padding-right:10px;}
+
+/*浮动菜单*/
+.menu{width:100%; min-width:320px; max-width:800px; position:fixed!important; position:absolute;bottom:0px!important; bottom:auto; top: expression(eval(document.compatMode && document.compatMode=='CSS1Compat') ? documentElement.scrollTop+(documentElement.clientHeight - this.clientHeight):document.body.scrollTop+(document.body.clientHeight - this.clientHeight)); background:#fff;color:#333; font-size:0.8em; z-index:100; text-align:center; border-top:#ccc 0px solid; line-height:2em; padding:8px 0;}
+.menu a{color:#333; text-decoration:none;}
+.menu span{width:33.3333%; float:left;}
+.menu .border{ border-right:#CCC solid 1px; margin-left:-1px;}

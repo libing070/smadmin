@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+    <!DOCTYPE mapper 
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aspire.shakewxpp.wap.mapper.WeixinVariableMapper">
+	<resultMap id="weixinVariable" type="com.aspire.shakewxpp.wap.entity.WeixinVariable" >
+		<result column="variable_name" property="variableName" />
+		<result column="variable_value" property="variableValue" />		
+		<result column="expires_in" property="expiresIn" />
+		<result column="update_time" property="updateTime" />
+		<result column="update_time" property="updateTimeDesc" />		
+		<result column="STATUS" property="status" />
+		<result column="TIP_DESC" property="tipDesc" />
+	</resultMap>	
+	
+	<!-- 共用查询条件 -->
+	<sql id="selectVariableWhere">
+		<where>
+			<if test="variableName != null and variableName != ''">
+				w.variable_name=#{variableName}
+			</if>
+			<if test="status != null and status != ''">
+				w.status =#{status}
+			</if>
+		</where>
+	</sql>
+	
+	<!-- 查询系统提示语内容配置列表 分页 -->
+	<select id="queryWeixinVariableList" resultMap="weixinVariable" parameterType="com.aspire.shakewxpp.wap.entity.WeixinVariable">
+	     select * from (
+	        select ROWNUM RN, t.* from (  
+	        	        SELECT w.* FROM WEIXIN_VARIABLE w 
+	    <include refid="selectVariableWhere" />   	
+		<if test="sort != null and sort != ''">
+			ORDER BY
+		       ${sort}
+		      <if test="order != null and order != ''">
+		       	${order}
+			  </if>
+	    </if>	
+	   	<![CDATA[
+					) t where rownum <= #{end}
+	       	) where RN >= #{start}
+	    ]]>
+	</select>
+	<!-- 查询系统提示语内容配置数量 分页 -->
+	<select id="queryWeixinVariableCount" resultType="Integer" parameterType="com.aspire.shakewxpp.wap.entity.WeixinVariable">	     
+	    SELECT count(*) FROM WEIXIN_VARIABLE w 
+	    <include refid="selectVariableWhere" />  
+	</select>
+	
+	<!-- 查询系统提示语内容配置列表 分页 -->
+	<select id="queryWeixinVariableInfo" resultMap="weixinVariable" parameterType="com.aspire.shakewxpp.wap.entity.WeixinVariable">
+	    SELECT w.* FROM WEIXIN_VARIABLE w 
+		<where>
+			1=1
+			<if test="shirouserId != null and shirouserId != ''">
+				and w.SHIROUSER_ID=#{shirouserId}
+			</if>
+			<if test="variableName != null and variableName != ''">
+				and w.variable_name=#{variableName}
+			</if>
+			<if test="status != null and status != ''">
+				and w.status =#{status}
+			</if>
+			<if test="variableName == null || variableName == ''">
+				1 != 1
+			</if>
+		</where>  
+	</select>
+	
+	<update id="updateWeixinVariable" parameterType="com.aspire.shakewxpp.wap.entity.WeixinVariable">
+		update WEIXIN_VARIABLE t 
+		<set>
+			<if test="shirouserId != null and shirouserId != ''">
+				and w.SHIROUSER_ID=#{shirouserId}
+			</if>
+			<if test="variableValue != null and variableValue != ''">
+				t.variable_value = #{variableValue},
+			</if>
+			<if test="status != null and status != ''">
+				t.STATUS = #{status},
+			</if>
+			 t.update_time = SYSDATE
+		</set>
+		WHERE t.variable_name = #{variableName}
+	</update>
+</mapper> 

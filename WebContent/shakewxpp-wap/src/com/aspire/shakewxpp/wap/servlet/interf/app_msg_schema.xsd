@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+    <xs:complexType name="ParamsType">
+        <xs:sequence>
+            <xs:element type="PropertyType" name="Property" maxOccurs="unbounded" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="PropertyType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="name" use="optional"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="AddressType">
+        <xs:sequence>
+            <xs:element type="xs:string" name="DeviceType"/>
+        </xs:sequence>
+    </xs:complexType>
+    <!--Interface Define -->
+    <xs:element name="YXReq" type="YXReqType"/>
+    <xs:complexType name="YXReqType">
+        <xs:sequence>
+            <xs:element type="xs:string" name="TransactionID"/>
+            <xs:element type="xs:string" name="Version"/>
+            <xs:element type="AddressType" name="SendAddress"/>
+            <xs:element type="AddressType" name="DestAddress"/>
+            <xs:element type="xs:string" name="FunCode" minOccurs="0"/>
+            <xs:element type="xs:string" name="Operate" minOccurs="0"/>
+            <xs:element type="ParamsType" name="Params"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="YXResp" type="YXRespType"/>
+    <xs:complexType name="YXRespType">
+        <xs:sequence>
+            <xs:element type="xs:string" name="TransactionID"/>
+            <xs:element type="xs:string" name="Version"/>
+            <xs:element type="xs:string" name="FunCode" minOccurs="0"/>
+            <xs:element type="xs:string" name="Operate" minOccurs="0"/>
+            <xs:element type="xs:string" name="hRet"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="MarketCreditNotifyReq" type="YXReqType"/>
+    <xs:element name="MarketCreditNotifyResp" type="YXRespType"/>
+</xs:schema>

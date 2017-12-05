@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+    <!DOCTYPE mapper 
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aspire.shakewxpp.wap.mapper.QiangFlowPackageMapper">
+
+	<!-- 查询freId大红包下小红包的数量-->
+	<select id="queryBigFlowPackageInfo" parameterType="Integer" resultType="Integer">
+		<![CDATA[
+		select count(1) from DISTRIBUTE_FLOW_RED_ENVELOPE t where t.fre_id = #{freId} and t.expired_time > sysdate
+		]]> 
+	</select>
+	
+	<!-- 查询用户是否抢过大红包下的小红包-->
+	<select id="queryUserQiangSubFlowByFreId" parameterType="com.aspire.shakewxpp.wap.entity.GrabFlowSubRedEnvelope" resultType="Integer">
+		select count(1) from GRAB_FLOW_SUB_RED_ENVELOPE t where t.openid = #{openId} and t.fre_id = #{freId}
+	</select>
+	
+	<insert id="addQiangSubFlow" parameterType="com.aspire.shakewxpp.wap.entity.GrabFlowSubRedEnvelope">
+		insert into GRAB_FLOW_SUB_RED_ENVELOPE(
+								  OPENID,
+								  <if test="bindMsisdn != null and bindMsisdn != ''" >
+								  BIND_MSISDN,
+								  </if>
+								  SHARE_OPENID,
+								  FRE_ID,
+								  SUB_FRE_ID,
+								  SUB_FRE_FLOW_CURRENCY,
+								  EXPIRED_TIME,
+								  STATUS,
+								  ACTIVITY_ID,
+								  APPLY_PROVINCE_ID
+								) values(
+								   #{openId},
+								   <if test="bindMsisdn != null and bindMsisdn != ''" >
+								   #{bindMsisdn},
+								   </if>
+								  (select min(t.openid) from DISTRIBUTE_FLOW_RED_ENVELOPE t where t.fre_id = #{freId}), 
+								  #{freId},
+								  #{subFreId},
+								  #{subFreFlowCurrency},
+								  sysdate+#{subFreExchangeDays},
+								  1,
+								  #{activityId},
+								  #{applyProvinceId}
+								)
+	</insert>
+</mapper> 
