@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+    <!DOCTYPE mapper 
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aspire.wifi.manage.mapper.ShiroUserMapper">
+	<resultMap type="com.aspire.wifi.manage.entity.ShiroUser" id="ShiroUser">
+		<id jdbcType="INTEGER" javaType="int" column="id" property="id" />
+		<result column="account" property="account" />
+		<result column="password" property="password" />
+		<result column="nickname" property="nickname" />
+		<result column="createTime" property="createTime" />
+		<result column="appId" property="appId" />
+		<result column="appSecret" property="appSecret" />
+		<result column="isServerApp" property="isServerApp" />
+		<result column="weixin_app_no" property="weixinAppNo" />
+		<result column="weixinAppName" property="weixinAppName" />
+	</resultMap>
+
+	<select id="queryAll" resultMap="ShiroUser">
+		SELECT
+		T.id ,
+		T.account ,
+		T.password ,
+		T.nickname ,
+		T.createTime ,
+		T.roles
+		FROM
+		SHIROUSER_MANAGE T
+		ORDER BY
+		T.createTime
+	</select>
+
+	<select id="queryOneByName" parameterType="String" resultMap="ShiroUser">
+		SELECT
+		T.id ,
+		T.account ,
+		T.password ,
+		T.nickname ,
+		T.createTime ,
+		T.roles
+		FROM
+		SHIROUSER_MANAGE T
+		where T.account = #{account}
+	</select>
+	
+	<!-- 共用查询条件 -->
+	<sql id="selectShiroUserWhere">
+		<where>
+			<if test="account != null and account != ''">
+				t.account = #{account}
+				or t.nickname = #{account}
+				or t.appId = #{account}
+			</if>
+		</where>
+	</sql>
+	
+	<!-- 查询用户信息 -->
+	<select id="getShiroUserList" resultMap="ShiroUser" parameterType="com.aspire.wifi.manage.entity.ShiroUser">
+				select * from (
+					select ROWNUM RN, t.* from (
+						select * from SHIROUSER_MANAGE t 
+						<include refid="selectShiroUserWhere" />   	
+						
+						<if test="sort != null and sort != ''">		
+							ORDER BY
+						       ${sort}
+						      <if test="order != null and order != ''">
+						       	${order}
+							  </if>
+	    				</if>
+	    				) t
+				
+				<![CDATA[
+					where rownum <= #{end}
+		       	) where RN >= #{start}
+		       	]]>
+	</select>
+	
+	<select id="getShiroUserListCount" resultType="integer" parameterType="com.aspire.wifi.manage.entity.ShiroUser">
+			select count(1) from SHIROUSER_MANAGE t 
+						<include refid="selectShiroUserWhere" />   	
+	</select>
+	
+	<select id="isShiroUserList" resultType="integer" parameterType="com.aspire.wifi.manage.entity.ShiroUser">
+			<![CDATA[
+				select t.ACCOUNT from SHIROUSER_MANAGE t where t.ACCOUNT = #{account}
+			]]>	
+	</select>
+	
+</mapper> 

@@ -1,0 +1,384 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+    <!DOCTYPE mapper 
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.aspire.wifi.manage.mapper.HeadlineContentMapper">
+	<resultMap type="com.aspire.wifi.manage.entity.HeadlineContentEntity" id="headlineContent">
+		<result column="headline_id" property="headlineId" />
+		<result column="mobile" property="mobile" />
+		<result column="nickname" property="nickname" />
+		<result column="content_type_id" property="contentTypeId" />
+		<result column="title" property="title" />
+		<result column="content" property="content" />
+		<result column="oper_date" property="operDate" />
+        <result column="oper_date_string" property="operDateString" />
+		<result column="audit_user" property="auditUser" />
+		<result column="audit_time" property="auditTime" />
+		<result column="audit_comment" property="auditComment" />
+		<result column="status" property="status" />
+		<result column="top_number" property="topNumber" />
+		<result column="reply_num" property="replyNum" />
+		<result column="praise_num" property="praiseNum" />
+        <result column="if_support_comment" property="ifSupportComment" />
+	</resultMap>
+	<!-- 评论Map -->
+	<resultMap type="com.aspire.wifi.manage.entity.HeadlineReplyEntity" id="headlineReply">
+		<id column="reply_id" property="replyId" />
+		<result column="headline_id" property="headlineId" />
+		<result column="mobile" property="mobile" />
+		<result column="nickname" property="nickname" />
+		<result column="reply_type" property="replyType" />
+		<result column="content" property="content" />
+        <result column="orig_content" property="origContent" />
+		<result column="parent_reply_id" property="parentReplyId" />
+		<result column="parent_mobile" property="parentMobile" />
+        <result column="parent_nickname" property="parentNickName" />
+		<result column="reply_date" property="replyDate" />
+        <result column="reply_date_string" property="replyStringDate" />
+		<result column="audit_user" property="auditUser" />
+		<result column="audit_time" property="auditTime" />
+		<result column="audit_comment" property="auditComment" />
+		<result column="status" property="status" />
+		<result column="headtitle" property="headtitle" />
+		<result column="headContent" property="headContent" />
+		<result column="headPic" property="headPic" />
+		<result column="headNickName" property="headNickName" />
+		<result column="replyConent" property="replyConent" />
+	    <result column="parent_nickname_reply_prefix" property="parentNickNameReplyPrefix" />
+	</resultMap>
+	<!-- 用户MAP -->
+	<resultMap type="com.aspire.wifi.manage.entity.UserInfoEntity" id="userInfo">
+		<result column="mobile" 	property="mobile" />
+		<result column="nickname" 	property="nickname" />
+		<result column="sex" 		property="sex" />		
+		<!-- <result column="head_show" 	property="head_show" />	 -->
+		<result column="head_show" property="head_show" javaType="byte[]" jdbcType="BLOB" typeHandler="org.apache.ibatis.type.BlobTypeHandler" />	
+		<result column="province" 	property="province" />		
+		<result column="province_id" 	property="provinceId" />		
+		<result column="city" 		property="city" />		
+		<result column="reg_date" 	property="reg_date" />		
+	</resultMap>
+	<!-- 新增头条 -->
+    <insert id="insertHeadlineContent" parameterType="com.aspire.wifi.manage.entity.HeadlineContentEntity" useGeneratedKeys="true" keyProperty="headlineId">
+        INSERT INTO headline_content (
+            mobile,
+            nickname,
+            content_type_id,
+            title,
+            orig_title,
+            content,
+            orig_content,
+            oper_date,
+            STATUS,
+            top_number,
+            reply_num,
+            praise_num,
+            if_support_comment
+        ) VALUES (
+            #{mobile},
+            #{nickname},
+            #{contentTypeId},
+            #{title},
+            #{origTitle},
+            #{content},
+            #{origContent},
+            NOW(),
+            #{status},
+            #{topNumber},
+            0,
+            0,
+            #{ifSupportComment}
+        )
+    </insert>
+<!-- 更新头条 -->
+    <update id="updateHeadline" parameterType="java.util.HashMap">
+        UPDATE headline_content
+        SET
+         <if test="limitReply != null and limitReply != ''">
+             if_support_comment = #{limitReply},
+        </if>
+         <if test="tuiguangNum != null and tuiguangNum != ''">
+             top_number = #{tuiguangNum},
+        </if>
+         <if test="headlineId == ''">
+             status=3,
+        </if>
+          oper_date = NOW()
+        WHERE 
+             headline_id in 
+             <foreach item="item" index="index" collection="isDel" open="(" separator="," close=")">  
+							 #{item}  
+			 </foreach>
+
+    </update>
+    
+    <!-- 查询头条列表 -->
+    <select id="searchHeadlineList"  parameterType="java.util.HashMap" resultMap="headlineContent">
+		select 
+		   t.headline_id,
+		   ui.nickname,
+		   t.content_type_id,
+		   t.title,
+		   t.content,
+		   DATE_FORMAT(
+            t.oper_date,
+            '%Y-%m-%d %H:%i:%S'
+            ) AS oper_date_string,
+		   t.status,
+		   t.reply_num,
+		   t.praise_num,
+		   t.if_support_comment,
+		   t.top_number 
+		from headline_content t, (SELECT DISTINCT mobile,nickname FROM (SELECT s.account mobile,s.nickname,1 is_manger from shirouser_manage s UNION All select u.mobile,u.nickname,0 is_manger from user_info u) m GROUP BY mobile )  ui 
+		where t.mobile = ui.mobile and
+		 <if test="isManger != null and isManger != ''">
+             ui.is_manger=#{isManger} and
+        </if>
+		 <if test="content != null and content != ''">
+             t.content like CONCAT('%',#{content},'%') and
+        </if>
+		 <if test="mobile != null and mobile != ''">
+             t.mobile like CONCAT('%', #{mobile}, '') and
+        </if>
+        <if test="contentTypeId != null and contentTypeId != ''">
+			 t.content_type_id = #{contentTypeId} and
+		</if>
+		  t.status in (0, 2)
+		order by t.oper_date desc limit #{begin},#{end}
+    </select>
+<!-- 查询头条的总记录 -->
+   <select id="searchHeadlineListCount" parameterType="java.util.HashMap"  resultType="integer">
+		select 
+		count(*)
+		from headline_content t, (SELECT DISTINCT mobile,nickname FROM (SELECT s.account mobile,s.nickname,1 is_manger from shirouser_manage s UNION All select u.mobile,u.nickname,0 is_manger from user_info u) m GROUP BY mobile )  ui 
+		where t.mobile = ui.mobile and
+		<if test="isManger != null and isManger != ''">
+             ui.is_manger=#{isManger} and
+        </if>
+	 	<if test="content != null and content != ''">
+             t.content like CONCAT('%',#{content},'%') and
+        </if>
+		 <if test="mobile != null and mobile != ''">
+             t.mobile like CONCAT('%', #{mobile}, '') and
+        </if>
+        <if test="contentTypeId != null and contentTypeId != ''">
+			 t.content_type_id = #{contentTypeId} and
+		</if>
+		 	
+		  t.status in (0, 2)
+    </select>   
+  <!-- 查询删除状态的头条 -->
+  <select id="queryDelStatusHeadLineList"  parameterType="java.util.HashMap" resultMap="headlineContent">
+  		select 
+		   t.headline_id,
+		   ui.nickname,
+		   t.content_type_id,
+		   t.title,
+		   t.content,
+		   DATE_FORMAT(
+            t.oper_date,
+            '%Y-%m-%d %H:%i:%S'
+            ) AS oper_date_string,
+		   t.status,
+		   t.reply_num,
+		   t.praise_num 
+		from headline_content t, user_info ui 
+		where t.mobile = ui.mobile and
+		<if test="contentHeadline != null and contentHeadline != ''">
+			 t.content like CONCAT('%',#{contentHeadline},'%') and
+		</if>
+		<if test="moibleHeadline != null and moibleHeadline != ''">
+			 t.mobile like CONCAT('%',#{moibleHeadline},'') and
+		</if>
+  		t.status=3
+  		order by t.oper_date desc limit #{begin},#{end}
+  </select>
+  <!-- 查询删除状态的头条总记录 -->
+  <select id="queryDelStatusHeadLineListCount"  parameterType="java.util.HashMap" resultType="integer">
+  		select 
+		  count(*)
+		from headline_content t, user_info ui 
+		where t.mobile = ui.mobile and
+		<if test="contentHeadline != null and contentHeadline != ''">
+			 t.content like CONCAT('%',#{contentHeadline},'%') and
+		</if>
+		<if test="moibleHeadline != null and moibleHeadline != ''">
+			 t.mobile like CONCAT('%',#{moibleHeadline},'') and
+		</if>		
+  		t.status=3
+  </select>
+  <!-- 查询评论,-->
+  <select id="querydelStatusReplyList"  parameterType="java.util.HashMap" resultMap="headlineReply">
+  		
+    	select  t2.nickname,t2.reply_id,t2.headtitle,t2.content,t2.reply_date_string,u.nickname parent_nickname,t2.parent_reply_id,t2.replyConent,t2.headNickName from (
+			<!--查询回复评论的评论 -->
+	  		(select h.reply_id,
+								h.nickname,
+								h.parent_mobile,
+								h.content,
+								h.headtitle,
+								h.reply_date_string,
+								h.parent_reply_id,
+								tr2.content AS replyConent,
+								ui2.nickname As headNickName
+					from (
+						select 
+						 tr.reply_id,
+						 ui.nickname,
+						 tr.parent_mobile,
+						 tr.content,	
+						 t.title AS headtitle,
+						 DATE_FORMAT(
+									tr.reply_date,
+									'%Y-%m-%d %H:%i:%S'
+									) AS reply_date_string,
+						 tr.parent_reply_id,
+						 t.mobile headline_mobile
+						from headline_reply tr, user_info ui,headline_content t 
+					where tr.mobile = ui.mobile and t.headline_id=tr.headline_id 
+						  and tr.parent_reply_id!=0 and 
+						  t.status in 
+						  <foreach item="item" index="index" collection="headlineStatus" open="(" separator="," close=")">  
+							 #{item}  
+						 </foreach>
+							and
+						<if test="contentReply != null and contentReply != ''">
+						 	tr.content like CONCAT('%',#{contentReply},'%') and
+						</if>
+						<if test="moibleReply != null and moibleReply != ''">
+							 tr.mobile like CONCAT('%',#{moibleReply},'') and
+						</if>
+				  		<if test="status != null and status != ''">
+				  			
+			  				tr.status in 
+							<foreach item="item" index="index" collection="status" open="(" separator="," close=")">  
+							 #{item}  
+							</foreach> 
+							
+							and
+			  			</if>
+			  			tr.reply_type=1
+				) h,headline_reply tr2,user_info ui2 WHERE tr2.reply_id=h.parent_reply_id and ui2.mobile=h.headline_mobile
+			) 
+			UNION ALL
+						<!--查询回复头条的评论 -->
+			(select 
+			   tr.reply_id,
+			   ui.nickname,
+			   tr.parent_mobile,
+			   tr.content,	
+			   t.title AS headtitle,
+			   DATE_FORMAT(
+	            tr.reply_date,
+	            '%Y-%m-%d %H:%i:%S'
+	            ) AS reply_date_string,
+				 tr.parent_reply_id,
+					'' AS replyConent,
+					'' AS headNickName
+	   		from headline_reply tr, user_info ui,headline_content t 
+			where tr.mobile = ui.mobile and t.headline_id=tr.headline_id 
+				  and tr.parent_reply_id=0 and
+				   t.status in 
+				   <foreach item="item" index="index" collection="headlineStatus" open="(" separator="," close=")">  
+							 #{item}  
+					</foreach>
+				   and
+						<if test="contentReply != null and contentReply != ''">
+						 	tr.content like CONCAT('%',#{contentReply},'%') and
+						</if>
+						<if test="moibleReply != null and moibleReply != ''">
+							 tr.mobile like CONCAT('%',#{moibleReply},'') and
+						</if>
+				  		<if test="status != null and status != ''">
+			  				tr.status in 
+							<foreach item="item" index="index" collection="status" open="(" separator="," close=")">  
+							 #{item}  
+							</foreach>
+							 and
+			  			</if>
+			 			tr.reply_type=1
+			 ) 
+  		) t2,user_info u  WHERE t2.parent_mobile=u.mobile 		
+	  		order by t2.reply_date_string desc  limit #{begin},#{end}
+  		
+  </select>
+  <!-- 查询删除状态的评论总记录-->
+  <select id="querydelStatusReplyListCount"  parameterType="java.util.HashMap" resultType="integer">
+  			select SUM(a) from (
+			
+	  		(
+					select 
+					 count(*) a
+					from headline_reply tr, user_info ui,headline_content t 
+				where tr.mobile = ui.mobile and t.headline_id=tr.headline_id 
+					  and tr.parent_reply_id !=0 and  
+					   t.status in 
+					   <foreach item="item" index="index" collection="headlineStatus" open="(" separator="," close=")">  
+							 #{item}  
+					   </foreach>
+						 and
+				<if test="contentReply != null and contentReply != ''">
+				 	tr.content like CONCAT('%',#{contentReply},'%') and
+				</if>
+				<if test="moibleReply != null and moibleReply != ''">
+					 tr.mobile like CONCAT('%',#{moibleReply},'') and
+				</if>
+		  		<if test="status != null and status != ''">
+	  				tr.status in 
+					<foreach item="item" index="index" collection="status" open="(" separator="," close=")">  
+							 #{item}  
+					</foreach>
+					 and
+	  			</if>	
+				tr.reply_type=1
+			)
+			UNION ALL
+		(select 
+			  count(*) a
+	   		from headline_reply tr, user_info ui,headline_content t 
+			where tr.mobile = ui.mobile and t.headline_id=tr.headline_id 
+				  and tr.parent_reply_id=0 and  
+				   t.status in  
+				   	<foreach item="item" index="index" collection="headlineStatus" open="(" separator="," close=")">  
+							 #{item}  
+					</foreach>
+				 and
+				<if test="contentReply != null and contentReply != ''">
+				 	tr.content like CONCAT('%',#{contentReply},'%') and
+				</if>
+				<if test="moibleReply != null and moibleReply != ''">
+					 tr.mobile like CONCAT('%',#{moibleReply},'') and
+				</if>
+		  		<if test="status != null and status != ''">
+	  				tr.status in
+					<foreach item="item" index="index" collection="status" open="(" separator="," close=")">  
+							 #{item}  
+					</foreach>
+					and
+	  			</if>	
+			 tr.reply_type=1
+		)
+  		) t2
+					
+  </select>
+  <!-- 删除评论 -->
+   <update id="delReplyById" parameterType="String">
+   		 UPDATE headline_reply
+        SET status=3
+        where reply_id in
+		<foreach item="item" index="index" collection="replyId" open="(" separator="," close=")">  
+							 #{item}  
+		</foreach>
+   </update>
+   	<!-- 查询用户信息 -->
+	<select id="queryUserInfo" parameterType="String" resultMap="userInfo">
+		select  u.mobile,u.nickname,u.sex,u.head_show,u.province,u.city,u.reg_date from user_info u
+						where u.mobile=#{mobile}
+	</select>
+   	<!-- 查询管理员信息-->
+	<select id="queryShiroManger" parameterType="String" resultType="String">
+		select u.nickname from shirouser_manage u
+						where u.account =#{account}
+	</select>
+</mapper>

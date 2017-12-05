@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+    <!DOCTYPE mapper 
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aspire.wifi.manage.mapper.PinCreatetableMapper">
+	<resultMap type="com.aspire.wifi.manage.entity.PinCreatetable" id="pinCreatetable">
+		<id column="flash_sale_id" property="flashSaleId" />
+		<result column="act_type_id" property="actTypeId" />
+        <result column="act_type_name" property="actTypeName" />
+        <result column="act_status_id" property="actStatusId" />
+		<result column="act_status_name" property="actStatusName" />
+        <result column="consume_place_id" property="consumePlaceId" />
+		<result column="act_desc" property="actDesc" />
+		<result column="createtable_date" property="createTableDate" />
+        <result column="createtable_date_str" property="createTableDateStr" />
+        <result column="expired_date" property="expiredDate" />
+        <result column="expired_date_str" property="expiredDateStr" />
+		<result column="owner_mobile" property="ownerMobile" />
+        <result column="free_seat" property="freeSeat" />
+        <result column="consume_pic" property="consumePic" javaType="byte[]" jdbcType="BLOB" typeHandler="org.apache.ibatis.type.BlobTypeHandler" />
+		<result column="audit_user" property="auditUser" />
+        <result column="audit_time" property="auditTime" />
+        <result column="audit_time_str" property="auditTimeStr" />
+        <result column="audit_status" property="auditStatus" />
+        <result column="audit_comment" property="auditComment" />
+        <result column="auditFlag" property="auditFlag" />
+	</resultMap>
+
+	<sql id="queryPinCreatetableDomain">
+		SELECT DISTINCT
+            p.flash_sale_id,
+            p.act_type_id,
+            t.act_type_name,
+            p.act_status_id,
+            s.act_status_name,
+            p.consume_place_id,
+            p.act_desc,
+            p.createtable_date,
+            DATE_FORMAT(
+                p.createtable_date,
+                '%Y-%m-%d %H:%i:%S'
+            ) AS createtable_date_str,
+            p.expired_date,
+            DATE_FORMAT(
+                p.expired_date,
+                '%Y-%m-%d %H:%i:%S'
+            ) AS expired_date_str,
+            p.owner_mobile,
+            p.free_seat,
+            p.consume_pic,
+            p.audit_user,
+            p.audit_time,
+            DATE_FORMAT(
+                p.audit_time,
+                '%Y-%m-%d %H:%i:%S'
+            ) AS audit_time_str,
+            p.audit_status,
+            p.audit_comment,
+            u.nickname
+        FROM
+            pin_createtable p
+        LEFT JOIN act_status s ON p.act_status_id = s.act_status_id
+        LEFT JOIN act_type t ON p.act_type_id = t.act_type_id
+        LEFT JOIN user_info u ON p.owner_mobile = u.mobile
+        LEFT JOIN pin_createtable_detail d ON p.flash_sale_id = d.flash_sale_id
+        LEFT JOIN user_info du ON d.mobile = du.mobile
+	</sql>
+
+	<select id="queryPinCreatetable" parameterType="java.util.HashMap" resultMap="pinCreatetable">
+		<include refid="queryPinCreatetableDomain"/>
+		where 1=1
+        <if test="actStatusId != null and actStatusId != ''">
+            and p.act_status_id in
+             <foreach item="item" index="index" collection="actStatusId" open="(" separator="," close=")">  
+							 #{item}  
+			</foreach>
+        </if>
+        <if test="mobileOrNickname != null or mobileOrNickname != ''">
+            and ( p.owner_mobile like CONCAT('%',#{mobileOrNickname},'') or u.nickname like  CONCAT('%',#{mobileOrNickname},'') )
+        </if>
+        limit #{begin},#{end}
+	</select>
+
+    <select id="queryPinCreatetableCount" parameterType="java.util.HashMap" resultType="integer">
+        select count(1) from (
+            <include refid="queryPinCreatetableDomain"/>
+            where 1=1
+            <if test="actStatusId != null and actStatusId != ''">
+            and p.act_status_id in
+            	  <foreach item="item" index="index" collection="actStatusId" open="(" separator="," close=")">  
+							 #{item}  
+				 </foreach>
+      	   </if>
+        	<if test="mobileOrNickname != null or mobileOrNickname != ''">
+            and ( p.owner_mobile like CONCAT('%',#{mobileOrNickname},'') or u.nickname like  CONCAT('%',#{mobileOrNickname},'') )
+        	</if>
+        ) c
+    </select>
+
+    <select id="findPinCreatetable" parameterType="string" resultMap="pinCreatetable">
+      <include refid="queryPinCreatetableDomain"/>
+      where p.flash_sale_id = #{flashSaleId}
+    </select>
+
+	<update id="updatePinCreatetable" parameterType="com.aspire.wifi.manage.entity.PinCreatetable">
+        UPDATE pin_createtable
+           SET flash_sale_id = #{flashSaleId}
+                ,audit_time = now()
+                <if test="actStatusId != null and actStatusId != ''">
+                    ,act_status_id = #{actStatusId}
+                </if>
+                <if test="auditUser != null and auditUser != ''">
+                    ,audit_user = #{auditUser}
+                </if>
+                <if test="auditComment != null and auditComment != ''">
+                    ,audit_comment = #{auditComment}
+                </if>
+                <if test="auditStatus != null and auditStatus != ''">
+                    ,audit_status = #{auditStatus}
+                </if>
+         WHERE flash_sale_id = #{flashSaleId}
+	</update>
+
+    <insert id="insertPinCreatetableHist" parameterType="com.aspire.wifi.manage.entity.PinCreatetableHist" useGeneratedKeys="true" keyProperty="histId">
+        INSERT INTO pin_createtable_hist (
+            flash_sale_id,
+            act_desc,
+            act_type_id,
+            act_status_id,
+            consume_place_id,
+            createtable_date,
+            expired_date,
+            owner_mobile,
+            consume_pic,
+            audit_user,
+            audit_time,
+            audit_status,
+            audit_comment,
+            action_date,
+            action_type,
+            action_desc
+        ) SELECT
+            flash_sale_id,
+            act_desc,
+            act_type_id,
+            act_status_id,
+            consume_place_id,
+            createtable_date,
+            expired_date,
+            owner_mobile,
+            consume_pic,
+            audit_user,
+            audit_time,
+            audit_status,
+            audit_comment,
+            now() AS action_date,
+            '2' AS action_type,
+            #{actionDesc} AS action_desc
+        FROM
+            pin_createtable
+        WHERE
+            flash_sale_id = #{flashSaleId}
+    </insert>
+
+    <insert id="insertPinCreatetableDetailHist" parameterType="com.aspire.wifi.manage.entity.PinCreatetableDetailHist" useGeneratedKeys="true" keyProperty="histId">
+        INSERT INTO pin_createtable_detail_hist (
+            flash_sale_id,
+            mobile,
+            is_owner_mobile,
+            join_date,
+            action_date,
+            action_type,
+            action_desc
+        ) SELECT
+            flash_sale_id,
+            mobile,
+            is_owner_mobile,
+            join_date,
+            now() AS action_date,
+            '2' AS action_type,
+            #{actionDesc} AS action_desc
+        FROM
+            pin_createtable_detail
+        WHERE
+            flash_sale_id = #{flashSaleId}
+    </insert>
+</mapper> 

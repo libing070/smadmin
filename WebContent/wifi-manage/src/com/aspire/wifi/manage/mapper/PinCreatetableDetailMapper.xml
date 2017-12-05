@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+    <!DOCTYPE mapper 
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aspire.wifi.manage.mapper.PinCreatetableDetailMapper">
+	<resultMap type="com.aspire.wifi.manage.entity.PinCreatetableDetail" id="pinCreatetableDetail">
+		<result column="flash_sale_id" property="flashSaleId" />
+		<result column="mobile" property="mobile" />
+        <result column="nickname" property="nickName" />
+		<result column="join_date" property="joinDate" />
+        <result column="join_date_str" property="joinDateStr" />
+        <result column="is_owner_mobile" property="isOwnerMobile" />
+	</resultMap>
+
+	<sql id="queryPindanDomain">
+		SELECT DISTINCT
+            p.flash_sale_id,
+            p.mobile,
+            u.nickname,
+            p.join_date,
+            DATE_FORMAT(
+                p.join_date,
+                '%Y-%m-%d %H:%i:%S'
+            ) AS join_date_str,
+            p.is_owner_mobile
+        FROM
+            pin_createtable_detail p
+        LEFT JOIN user_info u ON p.mobile = u.mobile
+	</sql>
+
+	<select id="queryCreatetableDetail" parameterType="string" resultMap="pinCreatetableDetail">
+		<include refid="queryPindanDomain"/>
+		where p.flash_sale_id = #{flashSaleId}
+	</select>
+
+	
+</mapper> 

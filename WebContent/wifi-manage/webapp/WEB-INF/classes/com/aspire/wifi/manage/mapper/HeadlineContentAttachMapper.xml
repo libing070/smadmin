@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+    <!DOCTYPE mapper 
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aspire.wifi.manage.mapper.HeadlineContentAttachMapper">
+	<resultMap type="com.aspire.wifi.manage.entity.HeadlineContentAttachEntity" id="headlineContentAttach">
+		<result column="headline_id" property="headlineId" />
+        <result column="picture" property="picture" javaType="byte[]" jdbcType="BLOB" typeHandler="org.apache.ibatis.type.BlobTypeHandler" />
+		<result column="picture_serialnum" property="pictureSerialnum" />
+	</resultMap>
+
+    <resultMap type="com.aspire.wifi.manage.entity.HeadlineContentAttachEntity" id="byteMapContentAttach">
+        <result column="picture" property="picture" javaType="byte[]" jdbcType="BLOB" typeHandler="org.apache.ibatis.type.BlobTypeHandler" />
+    </resultMap>
+
+	<sql id="queryAttachDomain">
+		SELECT DISTINCT
+            h.headline_id,
+            h.picture,
+            h.picture_serialnum
+        FROM
+            headline_content_attach h
+	</sql>
+
+	<select id="queryAttach" parameterType="string" resultMap="headlineContentAttach">
+		<include refid="queryAttachDomain"/>
+		where h.headline_id = #{headlineId}
+	</select>
+
+    <select id="findAttach" parameterType="string" resultMap="byteMapContentAttach">
+        SELECT
+            picture
+        FROM
+            headline_content_attach
+        WHERE
+            picture_serialnum = #{pictureSerialnum}
+    </select>
+
+    <insert id="uploadHeadlineContentAttach" parameterType="com.aspire.wifi.manage.entity.HeadlineContentAttachEntity" useGeneratedKeys="true" keyProperty="pictureSerialnum">
+        INSERT INTO headline_content_attach (
+            headline_id,
+            picture
+        )
+        VALUE
+            (#{headlineId}, #{picture})
+    </insert>
+
+    <delete id="deleteAttach" parameterType="long">
+        DELETE FROM headline_content_attach WHERE headline_id = #{headlineId}
+    </delete>
+</mapper> 

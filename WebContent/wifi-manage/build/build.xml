@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project default="doAll" name="wifi-manage" basedir=".">
+	<description>Build wifi-manage</description>
+	<property environment="env" />
+	<property name="SrcPath" value="${env.COMPONENT_SRC_PATH}" />
+	<property name="ReleasePath" value="${env.RELEASE_HOME}" />
+	<property name="ClassPath" value="${ReleasePath}/webapp/WEB-INF/classes" />
+
+	<path id="ref_classpath">
+		<fileset dir="${SrcPath}\webapp\WEB-INF\lib">
+			<include name="*.jar" />
+		</fileset>
+	</path>
+
+	<target name="init">
+		<echo>init begin...</echo>
+		<delete dir="${ReleasePath}" />
+		<delete dir="${ClassPath}" /> 
+		<mkdir dir="${ClassPath}" /> 
+	</target>
+
+	<target name="compile" depends="init">
+		<echo>compile begin...</echo>
+		<javac destdir="${ClassPath}" debug="true" deprecation="off" nowarn="on" extdirs="true" includeantruntime="on" encoding="UTF-8">
+			<src path="${SrcPath}/src" />
+			<classpath refid="ref_classpath" />
+		</javac>
+	</target>
+
+	<target name="copy" depends="compile">
+		<echo>copy files begin...</echo>
+
+		<copy todir="${ReleasePath}/webapp" overwrite="yes">
+			<fileset dir="${SrcPath}/webapp">
+				<exclude name="test/*" />
+				<exclude name="*/${ClassPath}/*" />
+				<exclude name="*/.svn/*" />
+				<exclude name="**/*.scc" />
+			</fileset>
+		</copy>
+		<copy todir="${ReleasePath}/conf" overwrite="yes">
+			<fileset dir="${SrcPath}/conf">
+				<exclude name="*/.svn/*" />
+				<exclude name="**/*.scc" />
+			</fileset>
+		</copy>
+		<copy todir="${ReleasePath}/doc" overwrite="yes">
+			<fileset dir="${SrcPath}/doc">
+				<exclude name="*/.svn/*" />
+				<exclude name="**/*.scc" />
+			</fileset>
+		</copy>
+		<copy todir="${ReleasePath}/dbscript" overwrite="yes">
+			<fileset dir="${SrcPath}/dbscript">
+				<exclude name="*/.svn/*" />
+				<exclude name="**/*.scc" />
+			</fileset>
+		</copy>	
+		<copy todir="${ClassPath}" overwrite="true">
+			<fileset dir="${SrcPath}/src">
+				<include name="**/*.xml" />
+				<include name="*.properties" />
+				<exclude name="*/.svn/*" />
+				<exclude name="**/*.scc" />
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="doAll" depends="copy">
+		<delete dir="${ReleasePath}/webapp/test" />
+		<war warfile="${ReleasePath}/wifi-manage.war" webxml="${ReleasePath}/webapp/WEB-INF/web.xml">
+			<fileset dir="${ReleasePath}/webapp">
+			</fileset>
+		</war>
+		
+		<delete dir="${ReleasePath}/webapp"/>
+	</target>
+</project>

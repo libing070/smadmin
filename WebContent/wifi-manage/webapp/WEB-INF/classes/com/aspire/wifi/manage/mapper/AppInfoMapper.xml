@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+    <!DOCTYPE mapper 
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aspire.wifi.manage.mapper.AppInfoMapper">
+  
+  	<resultMap type="com.aspire.wifi.manage.entity.AppInfoEntity" id="appInfo">
+		<id column="app_id" property="appId" />
+		<result column="app_name" property="appName" />
+        <result column="app_desc" property="appDesc" />
+        <result column="app_type" property="appType" />
+		<result column="app_for_system" property="appForSystem" />
+        <result column="icon" property="icon" javaType="byte[]" jdbcType="BLOB" typeHandler="org.apache.ibatis.type.BlobTypeHandler"/>
+		<result column="app_file_url" property="appFileUrl" />
+		<result column="app_version" property="appVersion" />
+        <result column="app_size" property="appSize" />
+        <result column="app_download_times" property="appDownloadTimes" />
+        <result column="app_star_level" property="appStarLevel" />
+        <result column="app_developer" property="appDeveloper" />
+        <result column="app_demo_pic1" property="appDemoPic1" javaType="byte[]" jdbcType="BLOB" typeHandler="org.apache.ibatis.type.BlobTypeHandler"/>
+        <result column="app_demo_pic2" property="appDemoPic2" javaType="byte[]" jdbcType="BLOB" typeHandler="org.apache.ibatis.type.BlobTypeHandler"/>
+        <result column="app_demo_pic3" property="appDemoPic3" javaType="byte[]" jdbcType="BLOB" typeHandler="org.apache.ibatis.type.BlobTypeHandler"/>
+        <result column="app_demo_pic4" property="appDemoPic4" javaType="byte[]" jdbcType="BLOB" typeHandler="org.apache.ibatis.type.BlobTypeHandler"/>
+        <result column="last_update_time" property="lastUpdateTime" />
+        <result column="last_update_time_str" property="lastUpdateTimeStr" />
+        <result column="is_top_area" property="isTopArea" />
+        <result column="app_status" property="appStatus" />
+        <result column="app_top_pic" property="appTopPic" javaType="byte[]" jdbcType="BLOB" typeHandler="org.apache.ibatis.type.BlobTypeHandler"/>
+	</resultMap>
+
+	<sql id="queryAppInfoDomain">
+ SELECT DISTINCT 
+     a.app_id,
+     a.app_name,
+     a.app_desc,
+     a.app_type,
+     a.app_for_system,
+     a.icon,
+     a.app_file_url,
+     a.app_version,
+     a.app_size,
+     a.app_download_times,
+     a.app_star_level,
+     a.app_developer,
+     a.app_demo_pic1,
+     a.app_demo_pic2,
+     a.app_demo_pic3,
+     a.app_demo_pic4,
+     a.last_update_time,
+      DATE_FORMAT(
+                a.last_update_time,
+                '%Y-%m-%d %H:%i:%S'
+            ) AS last_update_time_str,
+     a.app_status 
+     from app_info a 
+	</sql>
+		<select id="queryAppInfo" parameterType="com.aspire.wifi.manage.entity.AppInfoEntity" resultMap="appInfo">
+	  <include refid="queryAppInfoDomain"/>
+	  where 1=1
+        <if test="appName != null and appName != ''">
+			and a.app_name like CONCAT('%',#{appName},'%')
+		</if>
+        <if test="appDesc != null and appDesc != ''">
+			and a.app_desc like CONCAT('%',#{appDesc},'%')
+		</if>
+        <if test="appStatus != null and appStatus != ''">
+			and a.app_status = #{appStatus} 
+		</if>
+	   limit #{rows}, #{sizeCount}
+	</select>
+		<select id="searchAppInfoListCount" parameterType="java.util.HashMap"  resultType="integer">
+	  select count(*) from app_info a where 1=1 
+        <if test="appName != null and appName != ''">
+			and a.app_name like CONCAT('%',#{appName},'%')
+		</if>
+        <if test="appDesc != null and appDesc != ''">
+			and a.app_desc like CONCAT('%',#{appDesc},'%')
+		</if>
+        <if test="appStatus != null and appStatus != ''">
+			and a.app_status = #{appStatus} 
+		</if>
+	  	</select>
+	  	
+	<select id="searchAppInfoByAppId" parameterType="java.util.HashMap" resultMap="appInfo">
+	   select * from app_info a where 1=1 and a.app_id=#{appId} 
+	</select>
+	
+		<update id="uploadAppInfo" parameterType="com.aspire.wifi.manage.entity.AppInfoEntity">
+	   UPDATE app_info 
+	   SET 
+        last_update_time=now()
+        <if test="appName != null and appName != ''">
+        ,app_name=#{appName}
+        </if>
+        <if test="appDesc != null and appDesc != ''">
+        ,app_desc=#{appDesc}
+        </if>
+        <if test="appDeveloper != null and appDeveloper != ''">
+        ,app_developer=#{appDeveloper}
+        </if>
+        <if test="appSize != null and appSize != ''">
+        ,app_size=#{appSize}
+        </if>
+        <if test="appForSystem != null and appForSystem != ''">
+        ,app_for_system=#{appForSystem}
+        </if>
+        <if test="icon != null and icon != ''">
+        ,icon=#{icon}
+        </if>
+        <if test="appTopPic != null and appTopPic != ''">
+        ,app_top_pic=#{appTopPic}
+        </if>
+        <if test="isTopArea != null and isTopArea != ''">
+        ,is_top_area=#{isTopArea}
+        </if>
+        <if test="appDemoPic1 != null and appDemoPic1 != ''">
+         ,app_demo_pic1=#{appDemoPic1}
+        </if>
+        <if test="appDemoPic2 != null and appDemoPic2 != ''">
+         ,app_demo_pic2=#{appDemoPic2}
+        </if>
+        <if test="appDemoPic3 != null and appDemoPic3 != ''">
+         ,app_demo_pic3=#{appDemoPic3}
+        </if>
+        <if test="appDemoPic4 != null and appDemoPic4 != ''">
+         ,app_demo_pic4=#{appDemoPic4}
+        </if>
+            WHERE app_id=#{appId}
+	</update>
+	<!-- 新增应用 -->
+    <insert id="insertAppInfo" parameterType="com.aspire.wifi.manage.entity.AppInfoEntity" useGeneratedKeys="true" keyProperty="appId">
+        INSERT INTO app_info (
+           app_name,
+           app_desc,
+           app_type,
+           app_for_system,
+           icon,
+           app_file_url,
+           app_version,
+           app_size,
+           app_download_times,
+           app_star_level,
+           app_developer,
+           app_demo_pic1,
+           app_demo_pic2,
+           app_demo_pic3,
+           app_demo_pic4,
+           last_update_time,
+           is_top_area,
+           app_top_pic,
+           app_status
+        ) VALUES (
+            #{appName},
+            #{appDesc},
+            #{appType},
+            #{appForSystem},
+            #{icon},
+            'www.',
+            #{appVersion},
+            #{appSize},
+            0,
+            #{appStarLevel},
+            #{appDeveloper},
+            #{appDemoPic1},
+            #{appDemoPic2},
+            #{appDemoPic3},
+            #{appDemoPic4},
+            NOW(),
+            #{isTopArea},
+            #{appTopPic},
+            0
+        )
+    </insert>
+		<update id="clearAppDemoPicAll" parameterType="int">
+	   UPDATE app_info 
+	   SET 
+        last_update_time=now(),
+           app_demo_pic1=NULL,
+           app_demo_pic2=NULL,
+           app_demo_pic3=NULL,
+           app_demo_pic4=NULL
+           WHERE app_id=#{appId}
+	</update>
+	<update id="updateAppDemoPic"  parameterType="java.util.HashMap">
+	 UPDATE app_info 
+	   SET 
+        last_update_time=now()
+           <if test="appDemoPic1 == 'BLOB'">
+            ,app_demo_pic1=#{appDemoPic1}
+           </if>
+             <if test="appDemoPic2 == 'BLOB'">
+             ,app_demo_pic2=#{appDemoPic2}
+            </if>
+             <if test="appDemoPic3 == 'BLOB'">
+            , app_demo_pic3=#{appDemoPic3}
+            </if>
+             <if test="appDemoPic4 == 'BLOB'">
+             ,app_demo_pic4=#{appDemoPic4}
+            </if>
+           WHERE app_id=#{appId}
+    </update>
+
+</mapper>
+
+
+

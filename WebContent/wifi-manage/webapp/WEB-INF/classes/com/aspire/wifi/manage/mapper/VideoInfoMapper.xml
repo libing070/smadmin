@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+    <!DOCTYPE mapper 
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aspire.wifi.manage.mapper.VideoInfoMapper">
+  
+  	<resultMap type="com.aspire.wifi.manage.entity.VideoInfo" id="videoInfo">
+		<id column="video_id" property="videoId" />
+		<result column="video_name" property="videoName" />
+        <result column="video_desc" property="videoDesc" />
+        <result column="video_type" property="videoType" />
+		<result column="resource_path" property="resourcePath" />
+        <result column="video_pic" property="videoPic" javaType="byte[]" jdbcType="BLOB" typeHandler="org.apache.ibatis.type.BlobTypeHandler"/>
+		<result column="show_time_long" property="showTimeLong" />
+		<result column="play_cnt" property="playCnt" />
+        <result column="last_update_time" property="lastUpdateTime" />
+        <result column="last_update_time_str" property="lastUpdateTimeStr" />
+        <result column="is_top_area" property="isTopArea" />
+        <result column="video_top_pic" property="videoTopPic" javaType="byte[]" jdbcType="BLOB" typeHandler="org.apache.ibatis.type.BlobTypeHandler" />
+        <result column="video_status" property="videoStatus" />
+	</resultMap>
+	
+	<sql id="queryVideoInfoDomain">
+ SELECT DISTINCT 
+     v.video_id,
+     v.video_name,
+     v.video_desc,
+     v.video_type,
+     v.resource_path,
+     v.video_pic,
+     v.show_time_long,
+     v.play_cnt,
+     v.last_update_time,
+      DATE_FORMAT(
+                v.last_update_time,
+                '%Y-%m-%d %H:%i:%S'
+            ) AS last_update_time_str,
+     v.is_top_area,
+     v.video_top_pic,
+     v.video_status
+     from video_info v 
+	</sql>
+	
+	<select id="queryVideoInfo" parameterType="com.aspire.wifi.manage.entity.VideoInfo" resultMap="videoInfo">
+	  <include refid="queryVideoInfoDomain"/>
+	  where 1=1
+        <if test="videoName != null and videoName != ''">
+			and v.video_name like CONCAT('%',#{videoName},'%')
+		</if>
+        <if test="resourcePath != null and resourcePath != ''">
+			and v.resource_path like CONCAT('%',#{resourcePath},'%')
+		</if>
+        <if test="videoStatus != null and videoStatus != ''">
+			and v.video_status = #{videoStatus} 
+		</if>
+	   limit #{rows}, #{sizeCount}
+	</select>
+	
+	<select id="searchVideoInfoListCount" parameterType="java.util.HashMap"  resultType="integer">
+	  select count(*) from video_info v where 1=1 
+	   <if test="videoName != null and videoName != ''">
+			and v.video_name like CONCAT('%',#{videoName},'%')
+		</if>
+        <if test="resourcePath != null and resourcePath != ''">
+			and v.resource_path like CONCAT('%',#{resourcePath},'%')
+		</if>
+        <if test="videoStatus != null and videoStatus != ''">
+			and v.video_status = #{videoStatus} 
+		</if>
+	   
+	</select>
+	
+	<select id="searchVideoInfoByVideoId" parameterType="java.util.HashMap" resultMap="videoInfo">
+	   select * from video_info v where 1=1 and v.video_id=#{videoId} 
+	</select>
+	<update id="uploadVideoInfo" parameterType="com.aspire.wifi.manage.entity.VideoInfo">
+	   UPDATE video_info 
+	   SET 
+        last_update_time=now()
+        <if test="videoName != null and videoName != ''">
+        ,video_name=#{videoName}
+        </if>
+        <if test="videoDesc != null and videoDesc != ''">
+        ,video_desc=#{videoDesc}
+        </if>
+        <if test="videoPic != null and videoPic != ''">
+        ,video_pic=#{videoPic}
+        </if>
+        <if test="videoTopPic != null and videoTopPic != ''">
+        ,video_top_pic=#{videoTopPic}
+        </if>
+        <if test="isTopArea != null and isTopArea != ''">
+        ,is_top_area=#{isTopArea}
+        </if>
+        <if test="videoType != null and videoType != ''">
+         ,video_type=#{videoType}
+        </if>
+            WHERE video_id=#{videoId}
+	</update>
+	<!-- 新增视频 -->
+    <insert id="insertVideoInfo" parameterType="com.aspire.wifi.manage.entity.VideoInfo" useGeneratedKeys="true" keyProperty="videoId">
+        INSERT INTO video_info (
+           video_name,
+           video_desc,
+           video_type,
+           resource_path,
+           video_pic,
+           show_time_long,
+           play_cnt,
+           last_update_time,
+           is_top_area,
+           video_top_pic,
+           video_status
+        ) VALUES (
+            #{videoName},
+            #{videoDesc},
+            #{videoType},
+            #{resourcePath},
+            #{videoPic},
+            #{showTimeLong},
+            0,
+            NOW(),
+            #{isTopArea},
+            #{videoTopPic},
+            0
+        )
+    </insert>
+</mapper>
+
+
+
